@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#082719">
+
 <title>♞ Chess Club</title>
 
 <link rel="stylesheet" href="style.css">
@@ -26,17 +26,32 @@
         </div>
 
         <div class="playerMini">
-            <div class="playerMiniAvatar" id="homeAvatar">♟</div>
+
+            <div
+                class="playerMiniAvatar"
+                id="homeAvatar"
+            >
+                ♟
+            </div>
 
             <div>
-                <div class="playerMiniName" id="homeUsername">
+
+                <div
+                    class="playerMiniName"
+                    id="homeUsername"
+                >
                     Player
                 </div>
 
-                <div class="playerMiniElo" id="homeElo">
-                    1000 Elo
+                <div
+                    class="playerMiniElo"
+                    id="homeElo"
+                >
+                    3400 Elo
                 </div>
+
             </div>
+
         </div>
 
         <div class="buttons">
@@ -81,7 +96,6 @@
                 🧰 My Collection
             </button>
 
-            <!-- NEW: ADVANCEMENTS -->
             <button onclick="openAdvancements()">
                 🚀 Advancements
             </button>
@@ -113,7 +127,7 @@
         </div>
 
         <p class="version">
-            Version 8.0 Feature Build • Local Demo
+            Version 8.0 Feature Build • Online Multiplayer
         </p>
 
     </div>
@@ -157,37 +171,53 @@
 
     </div>
 
+
     <div class="gamePlayers">
 
         <div class="playerCard">
 
-            <div class="playerName" id="gameWhiteName">
+            <div
+                class="playerName"
+                id="gameWhiteName"
+            >
                 White
             </div>
 
-            <div class="playerElo" id="gameWhiteElo">
-                1000 Elo
+            <div
+                class="playerElo"
+                id="gameWhiteElo"
+            >
+                3400 Elo
             </div>
 
         </div>
 
+
         <div class="playerCard rightPlayer">
 
-            <div class="playerName" id="gameBlackName">
+            <div
+                class="playerName"
+                id="gameBlackName"
+            >
                 Black
             </div>
 
-            <div class="playerElo" id="gameBlackElo">
-                1000 Elo
+            <div
+                class="playerElo"
+                id="gameBlackElo"
+            >
+                3400 Elo
             </div>
 
         </div>
 
     </div>
+
 
     <div id="gameStatus">
         White to move
     </div>
+
 
     <div id="gameContainer">
 
@@ -201,7 +231,9 @@
 
         </div>
 
+
         <div id="chessBoard"></div>
+
 
         <div class="captureBox">
 
@@ -214,6 +246,7 @@
         </div>
 
     </div>
+
 
     <div id="moveList"></div>
 
@@ -230,11 +263,15 @@
         🤖 Play vs Bot
     </h1>
 
-    <button class="backButton" onclick="goHome()">
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
     <div id="botGrid"></div>
+
     <div id="botList"></div>
 
 </section>
@@ -250,27 +287,75 @@
         📚 Learn Chess
     </h1>
 
-    <button class="backButton" onclick="goHome()">
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div id="lessonList">
 
-        <button onclick="startLesson('pawn')">♙ Pawn</button>
-        <button onclick="startLesson('knight')">♘ Knight</button>
-        <button onclick="startLesson('bishop')">♗ Bishop</button>
-        <button onclick="startLesson('rook')">♖ Rook</button>
-        <button onclick="startLesson('queen')">♕ Queen</button>
-        <button onclick="startLesson('king')">♔ King</button>
-        <button onclick="startLesson('promotion')">♟ Promotion</button>
-        <button onclick="startLesson('opening')">🚪 Opening</button>
-        <button onclick="startLesson('middlegame')">⚔ Middlegame</button>
-        <button onclick="startLesson('endgame')">🏁 Endgame</button>
-        <button onclick="startLesson('tactics')">🎯 Tactics</button>
-        <button onclick="startLesson('strategy')">🧠 Strategy</button>
-        <button onclick="startLesson('checkmate')">♚ Check & Checkmate</button>
-        <button onclick="startLesson('castling')">🛡 Castling</button>
-        <button onclick="startLesson('enpassant')">↗ En Passant</button>
+        <button onclick="startLesson('pawn')">
+            ♙ Pawn
+        </button>
+
+        <button onclick="startLesson('knight')">
+            ♘ Knight
+        </button>
+
+        <button onclick="startLesson('bishop')">
+            ♗ Bishop
+        </button>
+
+        <button onclick="startLesson('rook')">
+            ♖ Rook
+        </button>
+
+        <button onclick="startLesson('queen')">
+            ♕ Queen
+        </button>
+
+        <button onclick="startLesson('king')">
+            ♔ King
+        </button>
+
+        <button onclick="startLesson('promotion')">
+            ♟ Promotion
+        </button>
+
+        <button onclick="startLesson('opening')">
+            🚪 Opening
+        </button>
+
+        <button onclick="startLesson('middlegame')">
+            ⚔ Middlegame
+        </button>
+
+        <button onclick="startLesson('endgame')">
+            🏁 Endgame
+        </button>
+
+        <button onclick="startLesson('tactics')">
+            🎯 Tactics
+        </button>
+
+        <button onclick="startLesson('strategy')">
+            🧠 Strategy
+        </button>
+
+        <button onclick="startLesson('checkmate')">
+            ♚ Check & Checkmate
+        </button>
+
+        <button onclick="startLesson('castling')">
+            🛡 Castling
+        </button>
+
+        <button onclick="startLesson('enpassant')">
+            ↗ En Passant
+        </button>
 
     </div>
 
@@ -281,17 +366,29 @@
      LEARN POPUP
 ========================================================= -->
 
-<div id="learnPopup" class="popupOverlay">
+<div
+    id="learnPopup"
+    class="popupOverlay"
+>
 
     <div id="learnCard">
 
-        <h2 id="learnTitle">Learn Chess</h2>
+        <h2 id="learnTitle">
+            Learn Chess
+        </h2>
 
-        <div id="learnStep">Step 1</div>
+        <div id="learnStep">
+            Step 1
+        </div>
 
-        <div id="learnText">Lesson</div>
+        <div id="learnText">
+            Lesson
+        </div>
 
-        <div class="learnExample" id="learnExample">
+        <div
+            class="learnExample"
+            id="learnExample"
+        >
             Example
         </div>
 
@@ -322,19 +419,39 @@
 
 <section id="friendsPage" class="page">
 
-    <h1>👥 Friends</h1>
+    <h1>
+        👥 Friends
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="socialGrid">
 
-        <button onclick="addFriend()">👤 Add Friend</button>
-        <button onclick="openFriendRequests()">📩 Requests</button>
-        <button onclick="openFriendChat()">💬 Chat With Friend</button>
-        <button onclick="playWithFriend()">♟ Play With Friend</button>
-        <button onclick="openFriendList()">🟢 Online Friends</button>
+        <button onclick="addFriend()">
+            👤 Add Friend
+        </button>
+
+        <button onclick="openFriendRequests()">
+            📩 Requests
+        </button>
+
+        <button onclick="openFriendChat()">
+            💬 Chat With Friend
+        </button>
+
+        <button onclick="playWithFriend()">
+            ♟ Play With Friend
+        </button>
+
+        <button onclick="openFriendList()">
+            🟢 Online Friends
+        </button>
 
     </div>
 
@@ -342,30 +459,66 @@
 
 
 <!-- =========================================================
-     ONLINE
+     ONLINE — SUPABASE MULTIPLAYER
 ========================================================= -->
 
-<section id="onlinePage" class="page">
+<section
+    id="onlinePage"
+    class="page"
+>
 
-    <h1>🌍 Online Chess</h1>
+    <h1>
+        🌍 Online Chess
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="matchCard">
 
-        <div class="matchAvatar">♟</div>
+        <div class="matchAvatar">
+            ♟
+        </div>
 
-        <h2 id="onlineUsername">Player</h2>
 
-        <p id="onlineStats">1000 Elo</p>
+        <h2 id="onlineUsername">
+            Player
+        </h2>
 
-        <button onclick="startMatchmaking()">
+
+        <p id="onlineStats">
+            3400 Elo
+        </p>
+
+
+        <!-- IMPORTANT:
+             Supabase connection/matchmaking status
+        -->
+
+        <p
+            id="onlineStatus"
+            aria-live="polite"
+        >
+            Connecting to Chess Club Online...
+        </p>
+
+
+        <button
+            onclick="startMatchmaking()"
+        >
             ⚔ Find Opponent
         </button>
 
-        <button onclick="cancelMatchmaking()">
+
+        <button
+            onclick="cancelMatchmaking()"
+        >
             ✕ Cancel Search
         </button>
 
@@ -380,65 +533,130 @@
 
 <section id="profilePage" class="page">
 
-    <h1>👤 My Profile</h1>
+    <h1>
+        👤 My Profile
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="profileCard">
 
-        <div class="profileAvatar" id="profileAvatar">
+        <div
+            class="profileAvatar"
+            id="profileAvatar"
+        >
             ♟
         </div>
 
-        <h2 id="profileUsername">Player</h2>
+
+        <h2 id="profileUsername">
+            Player
+        </h2>
+
 
         <div class="ownerBadge">
             👑 OWNER
         </div>
 
+
         <p id="profileAgeCategory">
             Age category: Private
         </p>
 
+
         <div class="profileStatGrid">
 
             <div class="profileStat">
-                <strong id="profileOverall">1000</strong>
-                <span>OVERALL</span>
+
+                <strong id="profileOverall">
+                    3400
+                </strong>
+
+                <span>
+                    OVERALL
+                </span>
+
             </div>
 
-            <div class="profileStat">
-                <strong id="profileBlitz">1000</strong>
-                <span>BLITZ</span>
-            </div>
 
             <div class="profileStat">
-                <strong id="profileRapid">1000</strong>
-                <span>RAPID</span>
+
+                <strong id="profileBlitz">
+                    3400
+                </strong>
+
+                <span>
+                    BLITZ
+                </span>
+
             </div>
 
-            <div class="profileStat">
-                <strong id="profileDaily">1000</strong>
-                <span>DAILY</span>
-            </div>
 
             <div class="profileStat">
-                <strong id="profilePuzzleRating">1000</strong>
-                <span>PUZZLES</span>
+
+                <strong id="profileRapid">
+                    3400
+                </strong>
+
+                <span>
+                    RAPID
+                </span>
+
             </div>
 
+
             <div class="profileStat">
-                <strong id="profileWins">0</strong>
-                <span>WINS</span>
+
+                <strong id="profileDaily">
+                    3400
+                </strong>
+
+                <span>
+                    DAILY
+                </span>
+
+            </div>
+
+
+            <div class="profileStat">
+
+                <strong id="profilePuzzleRating">
+                    1000
+                </strong>
+
+                <span>
+                    PUZZLES
+                </span>
+
+            </div>
+
+
+            <div class="profileStat">
+
+                <strong id="profileWins">
+                    0
+                </strong>
+
+                <span>
+                    WINS
+                </span>
+
             </div>
 
         </div>
 
+
         <button onclick="editProfile()">
             ✏ Edit Profile
         </button>
+
 
         <button onclick="openAchievements()">
             🏆 Achievements
@@ -450,14 +668,18 @@
 
 
 <!-- =========================================================
-     ADVANCEMENTS — NEW
+     ADVANCEMENTS
 ========================================================= -->
 
-<section id="advancementsPage" class="page">
+<section
+    id="advancementsPage"
+    class="page"
+>
 
     <h1>
         🚀 Advancements
     </h1>
+
 
     <button
         class="backButton"
@@ -465,6 +687,7 @@
     >
         ⬅ Back
     </button>
+
 
     <div class="featureGrid">
 
@@ -486,6 +709,7 @@
 
     </div>
 
+
     <div class="advancementsCard">
 
         <h2>
@@ -505,23 +729,48 @@
      PUZZLES
 ========================================================= -->
 
-<section id="puzzlesPage" class="page">
+<section
+    id="puzzlesPage"
+    class="page"
+>
 
-    <h1>🧩 Puzzles</h1>
+    <h1>
+        🧩 Puzzles
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="featureGrid">
 
-        <button onclick="openDailyPuzzle()">📅 Puzzle of the Day</button>
-        <button onclick="openRatedPuzzles()">⭐ Rated Puzzles</button>
-        <button onclick="openPuzzleStreak()">🔥 Puzzle Streak</button>
-        <button onclick="openPuzzleHistory()">📜 Puzzle History</button>
-        <button onclick="openPuzzleThemes()">🎯 Puzzle Themes</button>
+        <button onclick="openDailyPuzzle()">
+            📅 Puzzle of the Day
+        </button>
+
+        <button onclick="openRatedPuzzles()">
+            ⭐ Rated Puzzles
+        </button>
+
+        <button onclick="openPuzzleStreak()">
+            🔥 Puzzle Streak
+        </button>
+
+        <button onclick="openPuzzleHistory()">
+            📜 Puzzle History
+        </button>
+
+        <button onclick="openPuzzleThemes()">
+            🎯 Puzzle Themes
+        </button>
 
     </div>
+
 
     <div class="puzzleCard">
 
@@ -533,11 +782,14 @@
             Find the best move.
         </p>
 
+
         <div id="puzzleBoard"></div>
+
 
         <button onclick="usePuzzleHint()">
             💡 Hint — 0 Rating Points
         </button>
+
 
         <button onclick="retryPuzzle()">
             🔄 Retry
@@ -552,22 +804,44 @@
      TOURNAMENTS
 ========================================================= -->
 
-<section id="tournamentsPage" class="page">
+<section
+    id="tournamentsPage"
+    class="page"
+>
 
-    <h1>🏆 Tournaments</h1>
+    <h1>
+        🏆 Tournaments
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="featureGrid">
 
-        <button onclick="openBlitzTournament()">⚡ Blitz Tournament</button>
-        <button onclick="openRapidTournament()">🐇 Rapid Tournament</button>
-        <button onclick="openDailyTournament()">📅 Daily Tournament</button>
-        <button onclick="createTournament()">➕ Create Tournament</button>
+        <button onclick="openBlitzTournament()">
+            ⚡ Blitz Tournament
+        </button>
+
+        <button onclick="openRapidTournament()">
+            🐇 Rapid Tournament
+        </button>
+
+        <button onclick="openDailyTournament()">
+            📅 Daily Tournament
+        </button>
+
+        <button onclick="createTournament()">
+            ➕ Create Tournament
+        </button>
 
     </div>
+
 
     <div id="tournamentStandings"></div>
 
@@ -578,24 +852,52 @@
      COLLECTION
 ========================================================= -->
 
-<section id="collectionPage" class="page">
+<section
+    id="collectionPage"
+    class="page"
+>
 
-    <h1>🧰 My Collection</h1>
+    <h1>
+        🧰 My Collection
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="collectionGrid">
 
-        <div class="collectionItem">♟ <span>Chess Set</span></div>
-        <div class="collectionItem">🏅 <span>Badges</span></div>
-        <div class="collectionItem">🎨 <span>Board Themes</span></div>
-        <div class="collectionItem">🔊 <span>Sound Themes</span></div>
-        <div class="collectionItem">🦭 <span>Seal Cosmetics</span></div>
-        <div class="collectionItem">🧰 <span>Chest Rewards</span></div>
+        <div class="collectionItem">
+            ♟ <span>Chess Set</span>
+        </div>
+
+        <div class="collectionItem">
+            🏅 <span>Badges</span>
+        </div>
+
+        <div class="collectionItem">
+            🎨 <span>Board Themes</span>
+        </div>
+
+        <div class="collectionItem">
+            🔊 <span>Sound Themes</span>
+        </div>
+
+        <div class="collectionItem">
+            🦭 <span>Seal Cosmetics</span>
+        </div>
+
+        <div class="collectionItem">
+            🧰 <span>Chest Rewards</span>
+        </div>
 
     </div>
+
 
     <button onclick="openChests()">
         🎁 Open Chests
@@ -608,9 +910,15 @@
      ACHIEVEMENTS
 ========================================================= -->
 
-<section id="achievementsPage" class="page">
+<section
+    id="achievementsPage"
+    class="page"
+>
 
-    <h1>🏆 Achievements</h1>
+    <h1>
+        🏆 Achievements
+    </h1>
+
 
     <button
         class="backButton"
@@ -618,6 +926,7 @@
     >
         ⬅ Back
     </button>
+
 
     <div id="achievementGrid"></div>
 
@@ -628,13 +937,23 @@
      LIVE GAMES
 ========================================================= -->
 
-<section id="livePage" class="page">
+<section
+    id="livePage"
+    class="page"
+>
 
-    <h1>📺 Live Chess Games</h1>
+    <h1>
+        📺 Live Chess Games
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
+
 
     <div class="liveCard">
 
@@ -642,13 +961,16 @@
             🟢 LIVE NOW
         </div>
 
+
         <div id="liveBoards"></div>
+
 
         <p id="liveWatchTime">
             Watch time: 0 minutes
         </p>
 
     </div>
+
 
     <button onclick="openOwnerLivePanel()">
         👑 Owner Live Events
@@ -661,28 +983,43 @@
      COMMUNITY
 ========================================================= -->
 
-<section id="communityPage" class="page">
+<section
+    id="communityPage"
+    class="page"
+>
 
-    <h1>🌐 Community</h1>
+    <h1>
+        🌐 Community
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
 
+
     <div class="communityCard">
 
-        <h2>🟢 FAMILY FRIENDLY</h2>
+        <h2>
+            🟢 FAMILY FRIENDLY
+        </h2>
+
 
         <p>
             Posts in this community should be appropriate
             for chess players of all ages.
         </p>
 
+
         <textarea
             id="communityPost"
             maxlength="500"
             placeholder="Write a family-friendly post..."
         ></textarea>
+
 
         <button onclick="publishCommunityPost()">
             📢 Publish
@@ -697,22 +1034,39 @@
      PREMIUM
 ========================================================= -->
 
-<section id="premiumPage" class="page">
+<section
+    id="premiumPage"
+    class="page"
+>
 
-    <h1>👑 Premium</h1>
+    <h1>
+        👑 Premium
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
+
 
     <div class="premiumGrid">
 
         <div class="premiumCard">
 
-            <h2>⭐ Premium</h2>
+            <h2>
+                ⭐ Premium
+            </h2>
 
-            <p class="priceEnglish">$4.99</p>
-            <p class="pricePersian">۴۹۹٬۰۰۰ تومان</p>
+            <p class="priceEnglish">
+                $4.99
+            </p>
+
+            <p class="pricePersian">
+                ۴۹۹٬۰۰۰ تومان
+            </p>
 
             <button onclick="choosePremium()">
                 ⭐ Premium
@@ -720,12 +1074,20 @@
 
         </div>
 
+
         <div class="premiumCard">
 
-            <h2>👑 VIP Premium</h2>
+            <h2>
+                👑 VIP Premium
+            </h2>
 
-            <p class="priceEnglish">$9.99</p>
-            <p class="pricePersian">۹۹۹٬۰۰۰ تومان</p>
+            <p class="priceEnglish">
+                $9.99
+            </p>
+
+            <p class="pricePersian">
+                ۹۹۹٬۰۰۰ تومان
+            </p>
 
             <button onclick="chooseVipPremium()">
                 👑 VIP Premium
@@ -735,22 +1097,29 @@
 
     </div>
 
+
     <div class="supportCard">
 
-        <h2>❤️ Support Chess Club</h2>
+        <h2>
+            ❤️ Support Chess Club
+        </h2>
+
 
         <p>
             Payment/contact information can be shown here
             later through a parent/guardian-managed account.
         </p>
 
+
         <div class="supportPlaceholder">
             💬 WhatsApp — username/contact placeholder
         </div>
 
+
         <div class="supportPlaceholder">
             💬 Bale — username/contact placeholder
         </div>
+
 
         <p>
             📱 Phone number hidden
@@ -765,19 +1134,31 @@
      SETTINGS
 ========================================================= -->
 
-<section id="settingsPage" class="page">
+<section
+    id="settingsPage"
+    class="page"
+>
 
-    <h1>⚙ Settings</h1>
+    <h1>
+        ⚙ Settings
+    </h1>
 
-    <button class="backButton" onclick="goHome()">
+
+    <button
+        class="backButton"
+        onclick="goHome()"
+    >
         ⬅ Back
     </button>
+
 
     <div class="settingsGrid">
 
         <div class="settingCard">
 
-            <h2>🔊 Sound</h2>
+            <h2>
+                🔊 Sound
+            </h2>
 
             <p id="soundStatus">
                 Sounds are ON.
@@ -789,9 +1170,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>🎵 Sound Theme</h2>
+            <h2>
+                🎵 Sound Theme
+            </h2>
 
             <button onclick="chooseSoundTheme()">
                 Choose Sound Theme
@@ -799,9 +1183,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>✨ Animations</h2>
+            <h2>
+                ✨ Animations
+            </h2>
 
             <p id="animationStatus">
                 Animations are ON.
@@ -813,9 +1200,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>🌐 Language</h2>
+            <h2>
+                🌐 Language
+            </h2>
 
             <p id="languageStatus">
                 English
@@ -827,9 +1217,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>🛡 Privacy</h2>
+            <h2>
+                🛡 Privacy
+            </h2>
 
             <button onclick="openPrivacySettings()">
                 Privacy & Chat Controls
@@ -837,9 +1230,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>👤 Profile</h2>
+            <h2>
+                👤 Profile
+            </h2>
 
             <button onclick="openProfile()">
                 Open My Profile
@@ -847,9 +1243,12 @@
 
         </div>
 
+
         <div class="settingCard">
 
-            <h2>📜 Rules</h2>
+            <h2>
+                📜 Rules
+            </h2>
 
             <button onclick="openRules()">
                 View Rules
@@ -866,9 +1265,15 @@
      RULES
 ========================================================= -->
 
-<section id="rulesPage" class="page">
+<section
+    id="rulesPage"
+    class="page"
+>
 
-    <h1>📜 Chess Club Rules</h1>
+    <h1>
+        📜 Chess Club Rules
+    </h1>
+
 
     <button
         class="backButton"
@@ -877,38 +1282,70 @@
         ⬅ Back
     </button>
 
+
     <div class="rulesCard">
 
-        <h2>1. Be Respectful</h2>
-        <p>Treat other Chess Club players fairly and respectfully.</p>
+        <h2>
+            1. Be Respectful
+        </h2>
 
-        <h2>2. Play Fair</h2>
-        <p>Do not cheat or use unfair methods.</p>
+        <p>
+            Treat other Chess Club players fairly and respectfully.
+        </p>
 
-        <h2>3. No Sandbagging</h2>
+
+        <h2>
+            2. Play Fair
+        </h2>
+
+        <p>
+            Do not cheat or use unfair methods.
+        </p>
+
+
+        <h2>
+            3. No Sandbagging
+        </h2>
+
         <p>
             Do not intentionally lose games to lower your rating
             and gain an unfair advantage against lower-rated players.
         </p>
 
-        <h2>4. No Rating Manipulation</h2>
+
+        <h2>
+            4. No Rating Manipulation
+        </h2>
+
         <p>
             Do not arrange results or use multiple accounts
             to manipulate ratings.
         </p>
 
-        <h2>5. No Harassment</h2>
+
+        <h2>
+            5. No Harassment
+        </h2>
+
         <p>
             Do not bully, threaten, or repeatedly bother other players.
         </p>
 
-        <h2>6. Family Friendly</h2>
+
+        <h2>
+            6. Family Friendly
+        </h2>
+
         <p>
             Community content should remain appropriate for
             players of different ages.
         </p>
 
-        <h2>7. Have Fun</h2>
+
+        <h2>
+            7. Have Fun
+        </h2>
+
         <p>
             Chess Club is made for learning, improving,
             competing, and enjoying chess.
@@ -923,7 +1360,10 @@
      LOGIN / REGISTER
 ========================================================= -->
 
-<div id="loginOverlay" class="popupOverlay">
+<div
+    id="loginOverlay"
+    class="popupOverlay"
+>
 
     <div class="accountCard">
 
@@ -934,17 +1374,21 @@
             🌐 English / فارسی
         </button>
 
+
         <h1 id="loginTitle">
             ♞ Chess Club
         </h1>
+
 
         <p id="loginSubtitle">
             Sign in or create your Chess Club account.
         </p>
 
+
         <label id="loginUsernameLabel">
             Username
         </label>
+
 
         <input
             id="loginUsername"
@@ -954,9 +1398,11 @@
             placeholder="Choose a username"
         >
 
+
         <label id="loginPasswordLabel">
             Password
         </label>
+
 
         <input
             id="loginPassword"
@@ -966,11 +1412,16 @@
             placeholder="Choose a password"
         >
 
+
         <button onclick="createOrSignIn()">
             ♞ Continue
         </button>
 
-        <p id="loginMessage" class="formMessage"></p>
+
+        <p
+            id="loginMessage"
+            class="formMessage"
+        ></p>
 
     </div>
 
@@ -981,16 +1432,23 @@
      PLACEMENT TEST
 ========================================================= -->
 
-<div id="placementOverlay" class="popupOverlay hidden">
+<div
+    id="placementOverlay"
+    class="popupOverlay hidden"
+>
 
     <div class="testCard">
 
-        <h1>🧠 Chess Knowledge Check</h1>
+        <h1>
+            🧠 Chess Knowledge Check
+        </h1>
+
 
         <p>
             Choose how much chess you know, then prove it
             with questions and puzzles.
         </p>
+
 
         <div class="skillChoices">
 
@@ -1012,7 +1470,9 @@
 
         </div>
 
+
         <div id="placementQuestionArea"></div>
+
         <div id="placementResult"></div>
 
     </div>
@@ -1035,6 +1495,7 @@
             CHECKMATE!
         </div>
 
+
         <div class="resultPlayers">
 
             <div class="resultPlayer">
@@ -1046,19 +1507,23 @@
                     ♟
                 </div>
 
+
                 <h2 id="resultMyName">
                     You
                 </h2>
 
+
                 <p id="resultMyElo">
-                    1000 Elo
+                    3400 Elo
                 </p>
 
             </div>
 
+
             <div class="vs">
                 VS
             </div>
+
 
             <div class="resultPlayer">
 
@@ -1069,17 +1534,20 @@
                     🤖
                 </div>
 
+
                 <h2 id="resultOpponentName">
                     Opponent
                 </h2>
 
+
                 <p id="resultOpponentElo">
-                    1000 Elo
+                    3400 Elo
                 </p>
 
             </div>
 
         </div>
+
 
         <div
             class="resultOutcome"
@@ -1087,6 +1555,7 @@
         >
             YOU WON!
         </div>
+
 
         <button onclick="closeResult()">
             Continue
@@ -1098,11 +1567,18 @@
 
 
 <!-- =========================================================
-     JAVASCRIPT
+     SUPABASE
+     MUST LOAD BEFORE script.js
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- =========================================================
+     CHESS CLUB SCRIPT
 ========================================================= -->
 
 <script src="script.js"></script>
 
 </body>
 </html>
-
