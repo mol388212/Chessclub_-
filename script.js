@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 
 /* =========================================================
    CHESS CLUB — FULL SCRIPT
@@ -2308,7 +2308,8 @@ function botMove(){
         }
 
 
-        if(
+     
+  if(
             isInCheck(next,"w")
         ){
 
@@ -4167,35 +4168,1447 @@ function openFriendList(){
 
 
 /* =========================================================
-   ONLINE
+   ONLINE — SUPABASE REALTIME MULTIPLAYER
+   Uses Chess Club's existing 3400 Elo system
 ========================================================= */
+
+const SUPABASE_URL =
+    "https://rrpiqgofokdnsbtpqonb.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_prCylWcEGIwn00elHleGKw_Yu1_QPN6";
+
+let supabaseClient = null;
+let onlineUserId = null;
+let onlineGameId = null;
+let onlineColor = null;
+let onlineChannel = null;
+let onlineMatchmaking = false;
+let onlineReady = false;
+let onlineLastUpdated = null;
+
+let onlineOpponentName = "Opponent";
+let onlineOpponentElo = 3400;
+
+
+/* ---------------------------------------------------------
+   INITIALIZE SUPABASE
+--------------------------------------------------------- */
+
+async function initializeOnline(){
+
+    try{
+
+        if(
+            typeof supabase === "undefined" ||
+            !supabase.createClient
+        ){
+
+            console.error(
+                "Supabase library was not loaded."
+            );
+
+            onlineReady = false;
+
+            return;
+        }
+
+        supabaseClient =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+        let sessionResult =
+            await supabaseClient.auth.getSession();
+
+        let session =
+            sessionResult.data &&
+            sessionResult.data.session;
+
+        if(!session){
+
+            const signInResult =
+                await supabaseClient.auth.signInAnonymously();
+
+            if(signInResult.error){
+
+                console.error(
+                    "Anonymous sign-in failed:",
+                    signInResult.error
+                );
+
+                onlineReady = false;
+
+                return;
+            }
+
+            session =
+                signInResult.data.session;
+        }
+
+        if(session && session.user){
+
+            onlineUserId =
+                session.user.id;
+
+            onlineReady = true;
+
+            console.log(
+                "Chess Club Online ready:",
+                onlineUserId
+            );
+        }
+
+    }catch(error){
+
+        console.error(
+            "Online initialization failed:",
+            error
+        );
+
+        onlineReady = false;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   OPEN ONLINE PAGE
+--------------------------------------------------------- */
 
 function openOnline(){
 
     showPage("onlinePage");
 
     updateAllProfileDisplays();
+
+    const username =
+        profile &&
+        profile.username
+            ? profile.username
+            : "Player";
+
+    const elo =
+        profile &&
+        Number.isFinite(Number(profile.elo))
+            ? Math.max(
+                3400,
+                Number(profile.elo)
+            )
+            : 3400;
+
+    const usernameElement =
+        $("onlineUsername");
+
+    const statsElement =
+        $("onlineStats");
+
+    if(usernameElement){
+
+        usernameElement.textContent =
+            username;
+    }
+
+    if(statsElement){
+
+        statsElement.textContent =
+            `${elo} Elo`;
+    }
+
+    showOnlineStatus(
+        onlineReady
+            ? "🟢 Online system ready"
+            : "🟡 Connecting to Online..."
+    );
+
+    if(!onlineReady){
+
+        initializeOnline().then(() => {
+
+            if(onlineReady){
+
+                showOnlineStatus(
+                    "🟢 Online system ready"
+                );
+
+            }else{
+
+                showOnlineStatus(
+                    "🔴 Could not connect to Online"
+                );
+            }
+
+        });
+    }
 }
 
 
-function startMatchmaking(){
+/* ---------------------------------------------------------
+   ONLINE STATUS
+--------------------------------------------------------- */
 
-    alert(
-        "Online matchmaking is not connected to a server yet.\n\n" +
-        "Your local Chess Club game still works offline."
+function showOnlineStatus(message){
+
+    const status =
+        $("onlineStatus");
+
+    if(status){
+
+        status.textContent =
+            message;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   ROOM CODE
+--------------------------------------------------------- */
+
+function createRoomCode(){
+
+    return (
+        Math.random()
+            .toString(36)
+            .substring(2, 8)
+            .toUpperCase()
     );
 }
 
 
-function cancelMatchmaking(){
+/* ---------------------------------------------------------
+   START MATCHMAKING
+--------------------------------------------------------- */
 
-    alert(
-        "Matchmaking cancelled."
+async function startMatchmaking(){
+
+    if(onlineMatchmaking){
+
+        return;
+    }
+
+    if(!onlineReady){
+
+        await initializeOnline();
+    }
+
+    if(!onlineReady){
+
+        showOnlineStatus(
+            "🔴 Online is not connected."
+        );
+
+        return;
+    }
+
+    if(onlineGameId){
+
+        showOnlineStatus(
+            "⚠️ You are already in an online game."
+        );
+
+        return;
+    }
+
+    onlineMatchmaking = true;
+
+    showOnlineStatus(
+        "🔎 Looking for an opponent..."
+    );
+
+    try{
+
+        const playerName =
+            profile &&
+            profile.username
+                ? profile.username
+                : "Player";
+
+        const playerElo =
+            profile &&
+            Number.isFinite(Number(profile.elo))
+                ? Math.max(
+                    3400,
+                    Number(profile.elo)
+                )
+                : 3400;
+
+
+        /* -------------------------------------------------
+           LOOK FOR AN EXISTING WAITING GAME
+        ------------------------------------------------- */
+
+        const searchResult =
+            await supabaseClient
+                .from("chess_games")
+                .select("*")
+                .eq("status", "waiting")
+                .is("black_player_id", null)
+                .neq("white_player_id", onlineUserId)
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                )
+                .limit(1);
+
+        if(searchResult.error){
+
+            throw searchResult.error;
+        }
+
+
+        const waitingGame =
+            searchResult.data &&
+            searchResult.data.length
+                ? searchResult.data[0]
+                : null;
+
+
+        /* -------------------------------------------------
+           JOIN WAITING GAME
+        ------------------------------------------------- */
+
+        if(waitingGame){
+
+            const joinResult =
+                await supabaseClient
+                    .from("chess_games")
+                    .update({
+
+                        black_player_id:
+                            onlineUserId,
+
+                        black_name:
+                            playerName,
+
+                        black_elo:
+                            playerElo,
+
+                        status:
+                            "playing",
+
+                        updated_at:
+                            new Date().toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        waitingGame.id
+                    )
+                    .eq(
+                        "status",
+                        "waiting"
+                    )
+                    .is(
+                        "black_player_id",
+                        null
+                    )
+                    .select()
+                    .single();
+
+
+            if(
+                joinResult.error ||
+                !joinResult.data
+            ){
+
+                /*
+                   Someone else probably joined it first.
+                   Try matchmaking again.
+                */
+
+                onlineMatchmaking = false;
+
+                await new Promise(
+                    resolve =>
+                        setTimeout(
+                            resolve,
+                            300
+                        )
+                );
+
+                return startMatchmaking();
+            }
+
+
+            await joinOnlineGame(
+                joinResult.data,
+                "b"
+            );
+
+            return;
+        }
+
+
+        /* -------------------------------------------------
+           CREATE NEW WAITING GAME
+        ------------------------------------------------- */
+
+        const initialBoard =
+            cloneBoard(
+                START_BOARD
+            );
+
+        const insertResult =
+            await supabaseClient
+                .from("chess_games")
+                .insert({
+
+                    room_code:
+                        createRoomCode(),
+
+                    status:
+                        "waiting",
+
+                    white_player_id:
+                        onlineUserId,
+
+                    black_player_id:
+                        null,
+
+                    white_name:
+                        playerName,
+
+                    black_name:
+                        null,
+
+                    white_elo:
+                        playerElo,
+
+                    black_elo:
+                        null,
+
+                    board:
+                        initialBoard,
+
+                    turn:
+                        "w",
+
+                    castling_rights: {
+
+                        wK: true,
+                        wQ: true,
+                        bK: true,
+                        bQ: true
+
+                    },
+
+                    en_passant_target:
+                        null,
+
+                    winner:
+                        null,
+
+                    result_reason:
+                        null,
+
+                    last_move:
+                        null
+
+                })
+                .select()
+                .single();
+
+
+        if(insertResult.error){
+
+            throw insertResult.error;
+        }
+
+
+        await joinOnlineGame(
+            insertResult.data,
+            "w"
+        );
+
+
+        showOnlineStatus(
+            "⏳ Waiting for an opponent..."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Matchmaking error:",
+            error
+        );
+
+        onlineMatchmaking = false;
+
+        showOnlineStatus(
+            "🔴 Matchmaking failed."
+        );
+
+        alert(
+            "Chess Club Online could not start.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+/* ---------------------------------------------------------
+   JOIN ONLINE GAME
+--------------------------------------------------------- */
+
+async function joinOnlineGame(
+    game,
+    color
+){
+
+    onlineGameId =
+        game.id;
+
+    onlineColor =
+        color;
+
+    onlineMatchmaking =
+        false;
+
+    onlineOpponentName =
+        color === "w"
+            ? (
+                game.black_name ||
+                "Opponent"
+            )
+            : (
+                game.white_name ||
+                "Opponent"
+            );
+
+    onlineOpponentElo =
+        color === "w"
+            ? Math.max(
+                3400,
+                Number(game.black_elo || 3400)
+            )
+            : Math.max(
+                3400,
+                Number(game.white_elo || 3400)
+            );
+
+
+    /* -------------------------------------------------
+       COPY SERVER GAME STATE
+    ------------------------------------------------- */
+
+    board =
+        cloneBoard(
+            game.board ||
+            START_BOARD
+        );
+
+    turn =
+        game.turn ||
+        "w";
+
+    castlingRights =
+        structuredCloneSafe(
+            game.castling_rights ||
+            {
+                wK: true,
+                wQ: true,
+                bK: true,
+                bQ: true
+            }
+        );
+
+    enPassantTarget =
+        game.en_passant_target
+            ? {
+                ...game.en_passant_target
+            }
+            : null;
+
+    selectedSquare =
+        null;
+
+    legalTargets =
+        [];
+
+    capturedWhite =
+        [];
+
+    capturedBlack =
+        [];
+
+    moveHistory =
+        [];
+
+    positionHistory =
+        [];
+
+    gameOver =
+        game.status === "finished";
+
+
+    /* -------------------------------------------------
+       GO TO GAME BOARD
+    ------------------------------------------------- */
+
+    playingBot =
+        false;
+
+    currentBot =
+        null;
+
+    soloChess =
+        false;
+
+    renderBoard();
+
+    updatePlayers();
+
+    updateGameStatus();
+
+    updateMoveList();
+
+    updateCaptured();
+
+
+    showPage("game");
+
+
+    /* -------------------------------------------------
+       SUBSCRIBE TO GAME
+    ------------------------------------------------- */
+
+    await subscribeToOnlineGame();
+
+
+    if(game.status === "waiting"){
+
+        showOnlineStatus(
+            "⏳ Waiting for an opponent..."
+        );
+
+        $("gameStatus").textContent =
+            "⏳ Waiting for an opponent...";
+
+    }else{
+
+        showOnlineStatus(
+            "🟢 Online game started!"
+        );
+
+        updateGameStatus();
+    }
+}
+
+
+/* ---------------------------------------------------------
+   UPDATE ONLINE PLAYERS
+--------------------------------------------------------- */
+
+function updatePlayers(){
+
+    if(
+        onlineGameId &&
+        onlineColor
+    ){
+
+        const playerName =
+            profile &&
+            profile.username
+                ? profile.username
+                : "Player";
+
+        const playerElo =
+            profile &&
+            Number.isFinite(Number(profile.elo))
+                ? Math.max(
+                    3400,
+                    Number(profile.elo)
+                )
+                : 3400;
+
+        if($("whitePlayerName")){
+
+            $("whitePlayerName").textContent =
+                onlineColor === "w"
+                    ? playerName
+                    : onlineOpponentName;
+        }
+
+        if($("whitePlayerElo")){
+
+            $("whitePlayerElo").textContent =
+                (
+                    onlineColor === "w"
+                        ? playerElo
+                        : onlineOpponentElo
+                ) + " Elo";
+        }
+
+        if($("blackPlayerName")){
+
+            $("blackPlayerName").textContent =
+                onlineColor === "b"
+                    ? playerName
+                    : onlineOpponentName;
+        }
+
+        if($("blackPlayerElo")){
+
+            $("blackPlayerElo").textContent =
+                (
+                    onlineColor === "b"
+                        ? playerElo
+                        : onlineOpponentElo
+                ) + " Elo";
+        }
+
+        return;
+    }
+
+    /*
+       Keep the original Chess Club player updating
+       for bot/local games.
+    */
+
+    if(
+        typeof updateAllProfileDisplays ===
+        "function"
+    ){
+
+        updateAllProfileDisplays();
+    }
+}
+
+
+/* ---------------------------------------------------------
+   REALTIME SUBSCRIPTION
+--------------------------------------------------------- */
+
+async function subscribeToOnlineGame(){
+
+    if(!supabaseClient){
+
+        return;
+    }
+
+    if(onlineChannel){
+
+        try{
+
+            await supabaseClient
+                .removeChannel(
+                    onlineChannel
+                );
+
+        }catch(error){
+
+            console.warn(
+                "Could not remove old channel:",
+                error
+            );
+        }
+
+        onlineChannel =
+            null;
+    }
+
+
+    onlineChannel =
+        supabaseClient
+            .channel(
+                "chess-game-" +
+                onlineGameId
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "chess_games",
+                    filter:
+                        "id=eq." +
+                        onlineGameId
+                },
+                payload => {
+
+                    handleOnlineGameUpdate(
+                        payload.new
+                    );
+
+                }
+            )
+            .subscribe(
+                status => {
+
+                    console.log(
+                        "Online Realtime:",
+                        status
+                    );
+
+                }
+            );
+}
+
+
+/* ---------------------------------------------------------
+   HANDLE SERVER GAME UPDATE
+--------------------------------------------------------- */
+
+function handleOnlineGameUpdate(game){
+
+    if(
+        !game ||
+        game.id !== onlineGameId
+    ){
+
+        return;
+    }
+
+
+    onlineLastUpdated =
+        game.updated_at ||
+        null;
+
+
+    /* -------------------------------------------------
+       OPPONENT INFO
+    ------------------------------------------------- */
+
+    if(onlineColor === "w"){
+
+        onlineOpponentName =
+            game.black_name ||
+            "Opponent";
+
+        onlineOpponentElo =
+            Math.max(
+                3400,
+                Number(
+                    game.black_elo ||
+                    3400
+                )
+            );
+
+    }else{
+
+        onlineOpponentName =
+            game.white_name ||
+            "Opponent";
+
+        onlineOpponentElo =
+            Math.max(
+                3400,
+                Number(
+                    game.white_elo ||
+                    3400
+                )
+            );
+    }
+
+
+    updatePlayers();
+
+
+    /* -------------------------------------------------
+       GAME STATE
+    ------------------------------------------------- */
+
+    if(game.board){
+
+        board =
+            cloneBoard(
+                game.board
+            );
+    }
+
+    turn =
+        game.turn ||
+        "w";
+
+    castlingRights =
+        structuredCloneSafe(
+            game.castling_rights ||
+            castlingRights
+        );
+
+    enPassantTarget =
+        game.en_passant_target
+            ? {
+                ...game.en_passant_target
+            }
+            : null;
+
+
+    renderBoard();
+
+    updateMoveList();
+
+    updateCaptured();
+
+    updateGameStatus();
+
+
+    /* -------------------------------------------------
+       GAME RESULT
+    ------------------------------------------------- */
+
+    if(
+        game.status === "finished" &&
+        !gameOver
+    ){
+
+        gameOver = true;
+
+        handleOnlineResult(
+            game
+        );
+
+        return;
+    }
+
+
+    /* -------------------------------------------------
+       MATCH FOUND
+    ------------------------------------------------- */
+
+    if(
+        game.status === "playing"
+    ){
+
+        onlineMatchmaking =
+            false;
+
+        showOnlineStatus(
+            "🟢 Opponent connected!"
+        );
+
+        updateGameStatus();
+    }
+}
+
+
+/* ---------------------------------------------------------
+   SEND MOVE TO SUPABASE
+--------------------------------------------------------- */
+
+async function sendOnlineMove(
+    move,
+    state
+){
+
+    if(
+        !onlineGameId ||
+        !onlineColor ||
+        !supabaseClient
+    ){
+
+        return;
+    }
+
+
+    const movingColor =
+        onlineColor;
+
+
+    const nextTurn =
+        turn;
+
+
+    let winner =
+        null;
+
+    let resultReason =
+        null;
+
+    let status =
+        "playing";
+
+
+    /* -------------------------------------------------
+       CHECK FOR CHECKMATE / STALEMATE
+    ------------------------------------------------- */
+
+    const opponentMoves =
+        allLegalMoves(
+            state.board,
+            nextTurn
+        );
+
+
+    if(opponentMoves.length === 0){
+
+        const opponentInCheck =
+            isKingInCheck(
+                state.board,
+                nextTurn
+            );
+
+        status =
+            "finished";
+
+
+        if(opponentInCheck){
+
+            winner =
+                movingColor;
+
+            resultReason =
+                "checkmate";
+
+        }else{
+
+            winner =
+                "draw";
+
+            resultReason =
+                "stalemate";
+        }
+    }
+
+
+    try{
+
+        const updateResult =
+            await supabaseClient
+                .from("chess_games")
+                .update({
+
+                    board:
+                        state.board,
+
+                    turn:
+                        nextTurn,
+
+                    castling_rights:
+                        state.castlingRights,
+
+                    en_passant_target:
+                        state.enPassantTarget,
+
+                    last_move:
+                        move,
+
+                    status:
+                        status,
+
+                    winner:
+                        winner,
+
+                    result_reason:
+                        resultReason,
+
+                    updated_at:
+                        new Date().toISOString()
+
+                })
+                .eq(
+                    "id",
+                    onlineGameId
+                );
+
+
+        if(updateResult.error){
+
+            console.error(
+                "Move synchronization failed:",
+                updateResult.error
+            );
+
+            showOnlineStatus(
+                "🔴 Move failed to sync."
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Online move error:",
+            error
+        );
+    }
+}
+
+
+/* ---------------------------------------------------------
+   HANDLE ONLINE RESULT
+--------------------------------------------------------- */
+
+function handleOnlineResult(game){
+
+    if(!game){
+
+        return;
+    }
+
+
+    const winner =
+        game.winner;
+
+
+    const reason =
+        game.result_reason ||
+        "game over";
+
+
+    let playerWon =
+        false;
+
+
+    if(winner === "draw"){
+
+        playerWon = false;
+
+    }else if(
+        winner === onlineColor
+    ){
+
+        playerWon = true;
+    }
+
+
+    /* -------------------------------------------------
+       UPDATE PROFILE EXACTLY ONCE
+    ------------------------------------------------- */
+
+    const resultKey =
+        "chessClubOnlineResult_" +
+        game.id;
+
+
+    if(
+        localStorage.getItem(
+            resultKey
+        ) !== "done"
+    ){
+
+        localStorage.setItem(
+            resultKey,
+            "done"
+        );
+
+
+        profile.games =
+            Number(profile.games || 0) + 1;
+
+
+        if(winner === "draw"){
+
+            profile.streak = 0;
+
+        }else if(playerWon){
+
+            profile.wins =
+                Number(profile.wins || 0) + 1;
+
+            profile.streak =
+                Number(profile.streak || 0) + 1;
+
+            profile.bestStreak =
+                Math.max(
+                    Number(
+                        profile.bestStreak || 0
+                    ),
+                    Number(
+                        profile.streak || 0
+                    )
+                );
+
+            /*
+               Existing Chess Club Elo system:
+               WIN = +8
+            */
+
+            profile.elo =
+                Number(profile.elo || 3400) + 8;
+
+            profile.elo =
+                Math.max(
+                    3400,
+                    profile.elo
+                );
+
+        }else{
+
+            profile.losses =
+                Number(profile.losses || 0) + 1;
+
+            profile.streak = 0;
+
+            /*
+               Existing Chess Club Elo system:
+               LOSS = -5, minimum 3400
+            */
+
+            profile.elo =
+                Math.max(
+                    3400,
+                    Number(profile.elo || 3400) - 5
+                );
+        }
+
+
+        profile.blitz =
+            Math.max(
+                3400,
+                Number(profile.blitz || 3400)
+            );
+
+        profile.rapid =
+            Math.max(
+                3400,
+                Number(profile.rapid || 3400)
+            );
+
+        profile.daily =
+            Math.max(
+                3400,
+                Number(profile.daily || 3400)
+            );
+
+
+        if(
+            typeof saveProfile ===
+            "function"
+        ){
+
+            saveProfile();
+        }
+
+
+        if(
+            typeof checkAdvancements ===
+            "function"
+        ){
+
+            checkAdvancements();
+        }
+    }
+
+
+    gameOver = true;
+
+
+    let title =
+        "DRAW";
+
+    if(winner !== "draw"){
+
+        title =
+            playerWon
+                ? "YOU WIN!"
+                : "YOU LOSE";
+    }
+
+
+    let reasonText =
+        reason;
+
+
+    if(reason === "checkmate"){
+
+        reasonText =
+            "Checkmate!";
+    }
+
+    if(reason === "stalemate"){
+
+        reasonText =
+            "Stalemate — draw.";
+    }
+
+
+    showOnlineStatus(
+        playerWon
+            ? "🏆 You won!"
+            : winner === "draw"
+                ? "🤝 Draw"
+                : "❌ You lost"
+    );
+
+
+    /*
+       Use the existing result popup if available.
+       Set currentBot temporarily so the existing popup
+       has an opponent name to display.
+    */
+
+    const previousBot =
+        currentBot;
+
+    currentBot = {
+
+        name:
+            onlineOpponentName,
+
+        elo:
+            onlineOpponentElo
+    };
+
+
+    if(
+        typeof showResult ===
+        "function"
+    ){
+
+        showResult(
+            title,
+            reasonText
+        );
+
+    }else{
+
+        alert(
+            title +
+            "\n\n" +
+            reasonText
+        );
+    }
+
+
+    currentBot =
+        previousBot;
+
+
+    updateAllProfileDisplays();
+
+    updateGameStatus();
+}
+
+
+/* ---------------------------------------------------------
+   CANCEL MATCHMAKING
+--------------------------------------------------------- */
+
+async function cancelMatchmaking(){
+
+    if(!onlineGameId){
+
+        onlineMatchmaking =
+            false;
+
+        showOnlineStatus(
+            "Search cancelled."
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const result =
+            await supabaseClient
+                .from("chess_games")
+                .update({
+
+                    status:
+                        "cancelled",
+
+                    updated_at:
+                        new Date().toISOString()
+
+                })
+                .eq(
+                    "id",
+                    onlineGameId
+                )
+                .eq(
+                    "status",
+                    "waiting"
+                );
+
+
+        if(result.error){
+
+            console.error(
+                "Cancel error:",
+                result.error
+            );
+        }
+
+    }catch(error){
+
+        console.error(
+            "Cancel matchmaking error:",
+            error
+        );
+    }
+
+
+    await leaveOnlineGame();
+
+
+    showOnlineStatus(
+        "✕ Search cancelled."
     );
 }
 
 
-/* =========================================================
+/* ---------------------------------------------------------
+   LEAVE ONLINE GAME
+--------------------------------------------------------- */
+
+async function leaveOnlineGame(){
+
+    if(
+        onlineChannel &&
+        supabaseClient
+    ){
+
+        try{
+
+            await supabaseClient
+                .removeChannel(
+                    onlineChannel
+                );
+
+        }catch(error){
+
+            console.warn(
+                "Realtime cleanup failed:",
+                error
+            );
+        }
+    }
+
+
+    onlineChannel =
+        null;
+
+    onlineGameId =
+        null;
+
+    onlineColor =
+        null;
+
+    onlineMatchmaking =
+        false;
+
+    onlineOpponentName =
+        "Opponent";
+
+    onlineOpponentElo =
+        3400;
+
+    onlineLastUpdated =
+        null;
+}
+
+
+/* ---------------------------------------------------------
+   ONLINE TURN PROTECTION
+---------------------------------------------------------
+
+   Add this check inside your existing
+   handleSquareClick() function:
+
+   if(
+       onlineGameId &&
+       turn !== onlineColor
+   ){
+       return;
+   }
+
+--------------------------------------------------------- *//* =========================================================
    ANALYSIS
 ========================================================= */
 
