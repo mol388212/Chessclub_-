@@ -1,0 +1,2265 @@
+/* =========================================================
+   CHESS CLUB — FULL BOARD + UI REBUILD
+   Works with:
+   #trainingBoard
+   #chessBoard
+   #gameBoard
+   #puzzleBoard
+
+   CLASSIC BROWN / CREAM CHESS BOARD
+   RESPONSIVE DESKTOP + TABLET + MOBILE
+
+   120 ADVANCEMENTS — CLEAN SYSTEM
+========================================================= */
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+html {
+    background: #071c12;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(82, 135, 76, .20),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(255, 255, 255, .035),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #071c12,
+            #0b2a18 45%,
+            #123a20
+        );
+}
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, .018) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, .018) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button {
+    width: 100%;
+
+    min-height: 44px;
+
+    padding: 10px 15px;
+
+    border: 1px solid rgba(255, 255, 255, .10);
+
+    border-radius: 12px;
+
+    color: white;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(55, 125, 67, .95),
+            rgba(24, 78, 42, .95)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        0 6px 18px rgba(0, 0, 0, .28);
+
+    transition:
+        transform .12s ease,
+        filter .15s ease,
+        box-shadow .15s ease;
+}
+
+button:hover {
+    filter: brightness(1.10);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .12),
+        0 8px 22px rgba(0, 0, 0, .34);
+}
+
+button:active {
+    transform: scale(.98);
+
+    filter: brightness(.95);
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+#menu {
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: 55px;
+
+    padding: 40px;
+}
+
+#menu .left {
+    width: 390px;
+
+    flex: 0 0 390px;
+}
+
+#logo {
+    margin-bottom: 30px;
+}
+
+#logo h1 {
+    font-size: 64px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 3px 0 rgba(0, 0, 0, .5),
+        0 8px 25px rgba(0, 0, 0, .45);
+}
+
+#logo p {
+    margin-top: 10px;
+
+    color: #c8dfbd;
+
+    font-size: 20px;
+}
+
+.buttons {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.buttons button {
+    width: 100%;
+}
+
+.version {
+    margin-top: 20px;
+
+    color: #9bbd91;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MINI PLAYER
+========================================================= */
+
+.playerMini {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, .055);
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+}
+
+.playerMiniAvatar {
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex: 0 0 48px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #123d25,
+            #08180e
+        );
+
+    font-size: 28px;
+}
+
+.playerMiniName {
+    font-size: 17px;
+
+    font-weight: bold;
+}
+
+.playerMiniElo {
+    margin-top: 3px;
+
+    color: #b9d8b0;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   BOARD SHELL
+========================================================= */
+
+#boardContainer {
+    width: min(716px, 94vw);
+
+    flex: 0 1 716px;
+
+    margin: 0;
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .09),
+            rgba(0, 0, 0, .18)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .10);
+
+    backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, .48),
+        inset 0 1px 0 rgba(255, 255, 255, .08);
+
+    overflow: hidden;
+}
+
+#boardContainer h2 {
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   UNIVERSAL CHESS BOARD
+========================================================= */
+
+#trainingBoard,
+#chessBoard,
+#gameBoard,
+#puzzleBoard {
+
+    width: min(680px, 100%);
+
+    aspect-ratio: 1 / 1;
+
+    height: auto;
+
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    padding: 0;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(8, minmax(0, 1fr)) !important;
+
+    grid-template-rows:
+        repeat(8, minmax(0, 1fr)) !important;
+
+    gap: 0 !important;
+
+    position: relative;
+
+    background: #f0d9b5;
+
+    border:
+        6px solid #382316;
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 14px 38px rgba(0, 0, 0, .55),
+        0 0 0 2px rgba(255, 255, 255, .08);
+
+    box-sizing: border-box;
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   BOARD SQUARES
+========================================================= */
+
+#trainingBoard .chessSquare,
+#chessBoard .chessSquare,
+#gameBoard .chessSquare,
+#puzzleBoard .chessSquare {
+
+    position: relative !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: 0 !important;
+
+    outline: none;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    box-sizing: border-box !important;
+
+    transition:
+        filter .10s ease,
+        background-color .10s ease;
+}
+
+
+/* =========================================================
+   LIGHT SQUARE
+========================================================= */
+
+#trainingBoard .chessSquare.light,
+#chessBoard .chessSquare.light,
+#gameBoard .chessSquare.light,
+#puzzleBoard .chessSquare.light {
+
+    background: #f0d9b5 !important;
+}
+
+
+/* =========================================================
+   DARK SQUARE
+========================================================= */
+
+#trainingBoard .chessSquare.dark,
+#chessBoard .chessSquare.dark,
+#gameBoard .chessSquare.dark,
+#puzzleBoard .chessSquare.dark {
+
+    background: #b58863 !important;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+#trainingBoard .chessSquare:hover,
+#chessBoard .chessSquare:hover,
+#gameBoard .chessSquare:hover,
+#puzzleBoard .chessSquare:hover {
+
+    filter: brightness(1.08);
+}
+
+
+/* =========================================================
+   SELECTED SQUARE
+========================================================= */
+
+#trainingBoard .chessSquare.selected,
+#chessBoard .chessSquare.selected,
+#gameBoard .chessSquare.selected,
+#puzzleBoard .chessSquare.selected {
+
+    outline:
+        5px solid #00e676 !important;
+
+    outline-offset:
+        -5px !important;
+
+    z-index: 20 !important;
+}
+
+
+/* =========================================================
+   CHESS PIECES
+========================================================= */
+
+#trainingBoard .chessPiece,
+#chessBoard .chessPiece,
+#gameBoard .chessPiece,
+#puzzleBoard .chessPiece,
+.chessPiece {
+
+    position: absolute !important;
+
+    left: 50% !important;
+    top: 50% !important;
+
+    transform:
+        translate(-50%, -50%) !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    line-height: 1 !important;
+
+    font-family:
+        "Segoe UI Symbol",
+        "Noto Sans Symbols 2",
+        "Arial Unicode MS",
+        "DejaVu Sans",
+        sans-serif !important;
+
+    font-size:
+        clamp(42px, 6vw, 76px) !important;
+
+    font-weight: normal !important;
+
+    pointer-events: none !important;
+
+    user-select: none !important;
+
+    z-index: 40 !important;
+
+    white-space: nowrap;
+
+    overflow: visible;
+}
+
+
+/* =========================================================
+   WHITE PIECES
+========================================================= */
+
+.chessPiece.whitePiece {
+
+    color: #ffffff !important;
+
+    text-shadow:
+        0 1px 0 #111111,
+        0 2px 2px rgba(0, 0, 0, .75),
+        0 4px 7px rgba(0, 0, 0, .55) !important;
+}
+
+
+/* =========================================================
+   BLACK PIECES
+========================================================= */
+
+.chessPiece.blackPiece {
+
+    color: #111111 !important;
+
+    text-shadow:
+        0 1px 0 rgba(255, 255, 255, .35),
+        0 3px 5px rgba(0, 0, 0, .65) !important;
+}
+
+
+/* =========================================================
+   LEGAL MOVE DOT
+========================================================= */
+
+#trainingBoard .legalDot,
+#chessBoard .legalDot,
+#gameBoard .legalDot,
+#puzzleBoard .legalDot,
+.legalDot {
+
+    position: absolute !important;
+
+    left: 50% !important;
+    top: 50% !important;
+
+    width: 22px !important;
+    height: 22px !important;
+
+    transform:
+        translate(-50%, -50%) !important;
+
+    border-radius: 50% !important;
+
+    background:
+        rgba(20, 20, 20, .50) !important;
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, .30);
+
+    z-index: 30 !important;
+
+    pointer-events: none !important;
+}
+
+
+/* =========================================================
+   CAPTURE INDICATOR
+========================================================= */
+
+#trainingBoard .captureDot,
+#chessBoard .captureDot,
+#gameBoard .captureDot,
+#puzzleBoard .captureDot,
+.captureDot {
+
+    position: absolute !important;
+
+    left: 50% !important;
+    top: 50% !important;
+
+    width: 78% !important;
+    height: 78% !important;
+
+    transform:
+        translate(-50%, -50%) !important;
+
+    border:
+        5px solid rgba(20, 20, 20, .48) !important;
+
+    border-radius: 50% !important;
+
+    background: transparent !important;
+
+    z-index: 30 !important;
+
+    pointer-events: none !important;
+}
+
+
+/* =========================================================
+   PUZZLE BOARD
+========================================================= */
+
+#puzzleBoard {
+
+    margin-top: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   PAGES
+========================================================= */
+
+.page {
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 34px 22px;
+
+    text-align: center;
+
+    display: none;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.page h1 {
+
+    font-size: 40px;
+
+    text-shadow:
+        0 4px 24px rgba(0, 0, 0, .45);
+}
+
+.backButton {
+
+    width: 100%;
+
+    max-width: 180px;
+}
+
+
+/* =========================================================
+   GAME
+========================================================= */
+
+.topBar {
+
+    display: flex;
+
+    gap: 10px;
+
+    width: min(680px, 100%);
+
+    margin-bottom: 15px;
+}
+
+.topBar button {
+
+    flex: 1;
+}
+
+.gamePlayers {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    width: min(680px, 100%);
+
+    gap: 15px;
+}
+
+.playerCard {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, .055);
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+
+    text-align: left;
+}
+
+.rightPlayer {
+
+    text-align: right;
+}
+
+.playerName {
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.playerElo {
+
+    margin-top: 4px;
+
+    color: #b9d8b0;
+
+    font-size: 13px;
+}
+
+#gameStatus {
+
+    margin-bottom: 15px;
+
+    font-weight: bold;
+
+    color: #d9f0d0;
+}
+
+
+/* =========================================================
+   GAME CONTAINER
+========================================================= */
+
+#gameContainer {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .09),
+            rgba(0, 0, 0, .18)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .10);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, .48);
+
+    overflow: hidden;
+}
+
+#gameContainer > #chessBoard,
+#gameContainer > #gameBoard {
+
+    flex:
+        0 1 680px;
+
+    width:
+        min(680px, 100%) !important;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   CAPTURE BOXES
+========================================================= */
+
+.captureBox {
+
+    width: 150px;
+
+    min-width: 120px;
+
+    flex: 0 1 150px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 0, 0, .18);
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+.captureBox h3 {
+
+    color: #dbe9d5;
+
+    font-size: 14px;
+
+    margin-bottom: 10px;
+}
+
+#capturedWhite,
+#capturedBlack {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 3px;
+
+    min-height: 35px;
+
+    font-size: 25px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   MOVE LIST
+========================================================= */
+
+#moveList {
+
+    width: min(680px, 100%);
+
+    padding: 10px;
+}
+
+.moveItem {
+
+    padding: 8px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .06);
+}
+
+
+/* =========================================================
+   BOT PAGE
+========================================================= */
+
+#botGrid {
+
+    width: min(1200px, 100%);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+.botButton {
+
+    min-height: 75px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    text-align: left;
+}
+
+.botName {
+
+    font-weight: bold;
+}
+
+.botElo {
+
+    color: #d8efce;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   LEARN
+========================================================= */
+
+#lessonList {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   POPUPS
+========================================================= */
+
+.popupOverlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, .78);
+
+    z-index: 100000;
+}
+
+#learnCard,
+.accountCard,
+.testCard,
+.resultCard {
+
+    width: min(700px, 95vw);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 30px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #123b23,
+            #071b10
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .14);
+
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, .7);
+}
+
+#learnCard h2 {
+
+    font-size: 34px;
+
+    margin-bottom: 12px;
+}
+
+#learnStep {
+
+    color: #b9d8b0;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+}
+
+#learnText {
+
+    font-size: 20px;
+
+    line-height: 1.6;
+
+    text-align: left;
+
+    margin-bottom: 25px;
+}
+
+.learnExample {
+
+    padding: 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, .07);
+
+    font-size: 18px;
+
+    line-height: 1.6;
+}
+
+.learnControls {
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.learnControls button {
+
+    flex: 1;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.accountCard {
+
+    width: min(520px, 95vw);
+
+    text-align: center;
+}
+
+.languageButton {
+
+    margin-bottom: 15px;
+}
+
+.accountInput {
+
+    width: 100%;
+
+    padding: 14px 16px;
+
+    margin: 8px 0 14px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(255, 255, 255, .14);
+
+    background:
+        rgba(0, 0, 0, .25);
+
+    color: white;
+
+    font: inherit;
+}
+
+.formMessage {
+
+    min-height: 24px;
+
+    margin-top: 12px;
+
+    color: #b9f0b9;
+}
+
+
+/* =========================================================
+   FEATURE GRIDS
+========================================================= */
+
+.featureGrid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.featureGrid button {
+
+    min-height: 65px;
+}
+
+.socialGrid {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 14px;
+}
+
+.profileCard,
+.puzzleCard,
+.matchCard,
+.communityCard,
+.supportCard,
+.rulesCard {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255, 255, 255, .06);
+
+    border:
+        1px solid rgba(255, 255, 255, .09);
+
+    box-shadow:
+        0 18px 55px rgba(0, 0, 0, .30);
+}
+
+
+/* =========================================================
+   COLLECTION
+========================================================= */
+
+.collectionGrid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.collectionItem {
+
+    min-height: 130px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, .045);
+
+    border:
+        1px solid rgba(255, 255, 255, .06);
+
+    font-size: 35px;
+}
+
+.collectionItem span {
+
+    font-size: 15px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   PREMIUM
+========================================================= */
+
+.premiumGrid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.premiumCard {
+
+    padding: 35px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255, 255, 255, .07);
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+}
+
+.priceEnglish {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    margin: 15px 0 5px;
+}
+
+.pricePersian {
+
+    color: #b9d8b0;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settingsGrid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+}
+
+.settingCard {
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255, 255, 255, .06);
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+}
+
+.settingCard h2 {
+
+    margin-bottom: 10px;
+}
+
+.settingCard p {
+
+    color: #c9dbc4;
+
+    margin-bottom: 14px;
+}
+
+
+/* =========================================================
+   COMMUNITY
+========================================================= */
+
+.communityCard textarea {
+
+    width: 100%;
+
+    min-height: 150px;
+
+    resize: vertical;
+
+    padding: 14px;
+
+    margin: 15px 0;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(255, 255, 255, .14);
+
+    background:
+        rgba(0, 0, 0, .25);
+
+    color: white;
+
+    font: inherit;
+}
+
+
+/* =========================================================
+   RULES
+========================================================= */
+
+.rulesCard {
+
+    text-align: left;
+}
+
+.rulesCard h2 {
+
+    margin-top: 15px;
+
+    margin-bottom: 6px;
+}
+
+.rulesCard h2:first-child {
+
+    margin-top: 0;
+}
+
+.rulesCard p {
+
+    color: #d1dfcd;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SEAL PARTY
+========================================================= */
+
+#sealPartyOverlay {
+
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    padding: 20px !important;
+
+    background:
+        rgba(0, 0, 0, .82) !important;
+
+    z-index: 100000 !important;
+}
+
+#sealPartyOverlay img {
+
+    display: block;
+
+    width: min(520px, 85vw);
+
+    max-width: 90vw;
+
+    max-height: 75vh;
+
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, .8);
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+#resultOverlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, .82);
+
+    z-index: 100001;
+}
+
+.resultCard {
+
+    max-width: 700px;
+
+    text-align: center;
+}
+
+.resultTitle {
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    margin-bottom: 25px;
+}
+
+.resultPlayers {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 25px;
+}
+
+.resultPlayer {
+
+    flex: 1;
+}
+
+.resultAvatar {
+
+    font-size: 50px;
+}
+
+.vs {
+
+    font-weight: 900;
+
+    font-size: 20px;
+}
+
+.resultOutcome {
+
+    margin: 25px 0;
+
+    font-size: 30px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   🏆 120 ADVANCEMENTS
+   CLEAN — ONE SYSTEM ONLY
+========================================================= */
+
+#achievementGrid {
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin: 10px auto 30px;
+}
+
+
+/* =========================================================
+   EVERY SINGLE ADVANCEMENT GETS ITS OWN BOX
+========================================================= */
+
+#achievementGrid > * {
+
+    position: relative;
+
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 155px;
+
+    padding: 20px 14px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    gap: 7px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.15),
+            rgba(255,255,255,.07) 35%,
+            rgba(0,0,0,.16) 70%,
+            rgba(0,0,0,.32)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.14);
+
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.16),
+        inset 0 -8px 18px rgba(0,0,0,.22),
+        0 8px 22px rgba(0,0,0,.32);
+
+    backdrop-filter: blur(8px);
+
+    transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+}
+
+
+/* =========================================================
+   KEEP GENERATED CONTENT ABOVE EFFECTS
+========================================================= */
+
+#achievementGrid > * > * {
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   SHINY LIGHT
+========================================================= */
+
+#achievementGrid > *::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: -80%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 120%;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            115deg,
+            transparent 40%,
+            rgba(255,255,255,.12) 50%,
+            transparent 60%
+        );
+
+    transform: rotate(-8deg);
+
+    opacity: .8;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+#achievementGrid > *:hover {
+
+    transform:
+        translateY(-6px)
+        scale(1.025);
+
+    filter: brightness(1.12);
+
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.20),
+        inset 0 -8px 20px rgba(0,0,0,.25),
+        0 18px 38px rgba(0,0,0,.48);
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+#achievementGrid > * h1,
+#achievementGrid > * h2,
+#achievementGrid > * h3,
+#achievementGrid > * h4,
+#achievementGrid > * strong {
+
+    position: relative;
+
+    z-index: 3;
+
+    font-weight: 900;
+
+    text-shadow:
+        0 2px 5px rgba(0,0,0,.65);
+}
+
+#achievementGrid > * p {
+
+    position: relative;
+
+    z-index: 3;
+
+    color: #d3e8cd;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    text-shadow:
+        0 1px 4px rgba(0,0,0,.55);
+}
+
+
+/* =========================================================
+   EMOJI / ICON
+   Uses emojis/icons already generated by JavaScript.
+========================================================= */
+
+#achievementGrid > * .emoji,
+#achievementGrid > * .icon {
+
+    position: relative;
+
+    z-index: 3;
+
+    font-size: 40px;
+
+    line-height: 1;
+
+    filter:
+        drop-shadow(
+            0 4px 5px rgba(0,0,0,.60)
+        );
+
+    transition:
+        transform .18s ease,
+        filter .18s ease;
+}
+
+#achievementGrid > *:hover .emoji,
+#achievementGrid > *:hover .icon {
+
+    transform:
+        scale(1.15)
+        rotate(-3deg);
+
+    filter:
+        drop-shadow(
+            0 6px 8px rgba(0,0,0,.70)
+        );
+}
+
+
+/* =========================================================
+   LOCKED
+========================================================= */
+
+#achievementGrid > *.locked {
+
+    filter:
+        grayscale(.65)
+        brightness(.70);
+
+    opacity: .78;
+}
+
+
+/* =========================================================
+   UNLOCKED / COMPLETED / EARNED
+========================================================= */
+
+#achievementGrid > *.unlocked,
+#achievementGrid > *.completed,
+#achievementGrid > *.earned {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(75,155,85,.45),
+            rgba(24,78,42,.75) 55%,
+            rgba(5,31,17,.90)
+        );
+
+    border:
+        1px solid rgba(125,225,125,.40);
+
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.18),
+        inset 0 -8px 20px rgba(0,0,0,.28),
+        0 10px 28px rgba(0,0,0,.38),
+        0 0 20px rgba(70,190,90,.14);
+}
+
+
+/* =========================================================
+   GOLD / LEGENDARY
+========================================================= */
+
+#achievementGrid > *.gold,
+#achievementGrid > *.legendary {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,215,80,.28),
+            rgba(92,67,18,.58),
+            rgba(20,15,5,.88)
+        );
+
+    border:
+        1px solid rgba(255,220,100,.42);
+
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.18),
+        inset 0 -8px 20px rgba(0,0,0,.30),
+        0 10px 30px rgba(0,0,0,.42),
+        0 0 22px rgba(255,210,70,.15);
+}
+
+
+/* =========================================================
+   ADVANCEMENT COUNTER
+========================================================= */
+
+.advancementCount,
+.achievementCount {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 90px;
+
+    padding: 8px 14px;
+
+    margin-bottom: 10px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.13),
+            rgba(0,0,0,.25)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 5px 15px rgba(0,0,0,.25);
+
+    font-weight: 900;
+
+    color: #dff5d8;
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    #menu {
+
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 30px;
+
+        padding: 30px;
+    }
+
+    #menu .left {
+
+        width: 100%;
+
+        max-width: 420px;
+
+        flex: 0 0 auto;
+    }
+
+    #boardContainer {
+
+        width: min(716px, 94vw);
+
+        flex: 0 0 auto;
+    }
+
+    #trainingBoard,
+    #chessBoard,
+    #gameBoard,
+    #puzzleBoard {
+
+        width: min(680px, 90vw);
+
+        max-width: 90vw;
+    }
+
+    .topBar,
+    .gamePlayers,
+    #moveList {
+
+        width: min(680px, 90vw);
+    }
+
+    #gameContainer {
+
+        flex-wrap: wrap;
+    }
+
+    #gameContainer > #chessBoard,
+    #gameContainer > #gameBoard {
+
+        order: 1;
+
+        flex:
+            1 1 100%;
+    }
+
+    #gameContainer .captureBox {
+
+        order: 2;
+    }
+
+    .settingsGrid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .collectionGrid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   ADVANCEMENT TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+
+    #achievementGrid {
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+}
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    #menu {
+
+        padding: 20px 12px;
+    }
+
+    #logo h1 {
+
+        font-size: 40px;
+    }
+
+    #logo p {
+
+        font-size: 17px;
+    }
+
+    #boardContainer {
+
+        width: 100%;
+
+        padding: 10px;
+
+        border-radius: 14px;
+    }
+
+    #trainingBoard,
+    #chessBoard,
+    #gameBoard,
+    #puzzleBoard {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        border-width: 4px;
+    }
+
+    #trainingBoard .chessPiece,
+    #chessBoard .chessPiece,
+    #gameBoard .chessPiece,
+    #puzzleBoard .chessPiece,
+    .chessPiece {
+
+        font-size: 11vw !important;
+    }
+
+    #trainingBoard .legalDot,
+    #chessBoard .legalDot,
+    #gameBoard .legalDot,
+    #puzzleBoard .legalDot,
+    .legalDot {
+
+        width: 15px !important;
+
+        height: 15px !important;
+    }
+
+    #trainingBoard .captureDot,
+    #chessBoard .captureDot,
+    #gameBoard .captureDot,
+    #puzzleBoard .captureDot,
+    .captureDot {
+
+        border-width: 4px !important;
+    }
+
+    .topBar {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+    .topBar button {
+
+        min-width: 40%;
+    }
+
+    .gamePlayers {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        flex-direction: column;
+    }
+
+    #gameContainer {
+
+        width: 100%;
+
+        padding: 8px;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    #gameContainer > #chessBoard,
+    #gameContainer > #gameBoard {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        order: 1;
+    }
+
+    .captureBox {
+
+        width: 100%;
+
+        min-width: 0;
+
+        flex: 0 0 auto;
+
+        order: 2;
+    }
+
+    .rightPlayer {
+
+        text-align: left;
+    }
+
+    #moveList {
+
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+    .featureGrid,
+    .socialGrid,
+    .premiumGrid,
+    .settingsGrid,
+    .collectionGrid {
+
+        grid-template-columns: 1fr;
+    }
+
+    #lessonList {
+
+        grid-template-columns: 1fr;
+    }
+
+    .learnControls {
+
+        flex-direction: column;
+    }
+
+    .resultPlayers {
+
+        flex-direction: column;
+    }
+
+    .page {
+
+        padding: 24px 14px;
+    }
+
+    .page h1 {
+
+        font-size: 30px;
+    }
+
+    .puzzleCard {
+
+        padding: 15px;
+    }
+}
+
+
+/* =========================================================
+   ADVANCEMENT PHONE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    #achievementGrid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 11px;
+    }
+
+    #achievementGrid > * {
+
+        min-height: 135px;
+
+        padding: 16px 9px;
+
+        border-radius: 16px;
+    }
+
+    #achievementGrid > * .emoji,
+    #achievementGrid > * .icon {
+
+        font-size: 34px;
+    }
+
+    #achievementGrid > * h1,
+    #achievementGrid > * h2,
+    #achievementGrid > * h3,
+    #achievementGrid > * h4,
+    #achievementGrid > * strong {
+
+        font-size: 15px;
+    }
+
+    #achievementGrid > * p {
+
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 400px) {
+
+    #logo h1 {
+
+        font-size: 34px;
+    }
+
+    #logo p {
+
+        font-size: 16px;
+    }
+
+    #boardContainer {
+
+        padding: 7px;
+    }
+
+    #trainingBoard,
+    #chessBoard,
+    #gameBoard,
+    #puzzleBoard {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        border-width: 3px;
+
+        border-radius: 4px;
+    }
+
+    #trainingBoard .chessPiece,
+    #chessBoard .chessPiece,
+    #gameBoard .chessPiece,
+    #puzzleBoard .chessPiece,
+    .chessPiece {
+
+        font-size: 12vw !important;
+    }
+
+    .legalDot {
+
+        width: 12px !important;
+
+        height: 12px !important;
+    }
+
+    .captureDot {
+
+        border-width: 3px !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL ADVANCEMENT PHONES
+========================================================= */
+
+@media (max-width: 390px) {
+
+    #achievementGrid {
+
+        grid-template-columns: 1fr;
+    }
+
+    #achievementGrid > * {
+
+        min-height: 125px;
+    }
+}
+
+
+/* =========================================================
+   RTL / PERSIAN
+========================================================= */
+
+body.rtl {
+
+    direction: rtl;
+}
+
+body.rtl .page,
+body.rtl .left {
+
+    text-align: right;
+}
+
+body.rtl .playerCard {
+
+    text-align: right;
+}
+
+body.rtl .rightPlayer {
+
+    text-align: left;
+}
+
+body.rtl .rulesCard {
+
+    text-align: right;
+}
+
+body.rtl #learnText {
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   HIDDEN UTILITY
+========================================================= */
+
+.hidden {
+
+    display: none !important;
+}
+
+
+/* =========================================================
+   END OF CHESS CLUB STYLE
+========================================================= */
