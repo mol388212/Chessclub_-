@@ -1,29 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#082719">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#082719"
+>
 
 <title>♞ Chess Club</title>
 
-<link rel="stylesheet" href="style.css">
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+
+<!-- =========================================================
+     REAL 900-PUZZLE SYSTEM STYLES
+========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="v2-puzzles-real.css"
+>
+
+
+<style>
+
+/* =========================================================
+   ORIGINAL BOARD PROTECTION
+========================================================= */
+
+#chessBoard {
+
+    width:
+        min(
+            90vw,
+            640px
+        );
+
+    height:
+        min(
+            90vw,
+            640px
+        );
+
+    max-width:
+        640px;
+
+    max-height:
+        640px;
+}
+
+
+#trainingBoard {
+
+    width:
+        min(
+            90vw,
+            640px
+        );
+
+    height:
+        min(
+            90vw,
+            640px
+        );
+
+    max-width:
+        640px;
+
+    max-height:
+        640px;
+}
+
+
+#v2SoloBoard {
+
+    width:
+        480px;
+
+    height:
+        480px;
+
+    max-width:
+        90vw;
+
+    max-height:
+        90vw;
+}
+
+
+/* =========================================================
+   V2 SECTIONS
+========================================================= */
+
+body > .v2-page {
+
+    display:
+        none !important;
+}
+
+
+#indexV2Popup .v2-page {
+
+    display:
+        block !important;
+}
+
+
+/* =========================================================
+   V2 HOME BUTTONS
+========================================================= */
+
+.v2-home-links {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        12px;
+
+    margin-top:
+        15px;
+}
+
+
+.v2-home-links button {
+
+    border:
+        0;
+
+    border-radius:
+        16px;
+
+    padding:
+        14px 18px;
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            145deg,
+            #315f46,
+            #173b2b
+        );
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 7px 0 #10261c,
+        0 12px 22px rgba(
+            0,
+            0,
+            0,
+            0.24
+        );
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        filter 0.15s ease;
+}
+
+
+.v2-home-links button:hover {
+
+    transform:
+        translateY(
+            -3px
+        )
+        scale(
+            1.02
+        );
+
+    filter:
+        brightness(
+            1.1
+        );
+
+    box-shadow:
+        0 10px 0 #10261c,
+        0 16px 28px rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+}
+
+
+.v2-home-links button:active {
+
+    transform:
+        translateY(
+            4px
+        )
+        scale(
+            0.99
+        );
+
+    box-shadow:
+        0 2px 0 #10261c,
+        0 7px 12px rgba(
+            0,
+            0,
+            0,
+            0.2
+        );
+}
+
+
+/* =========================================================
+   V2 POPUP
+========================================================= */
+
+#indexV2Popup {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        1000000;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        18px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(
+                255,
+                255,
+                255,
+                0.08
+            ),
+            rgba(
+                0,
+                0,
+                0,
+                0.82
+            )
+        );
+
+    backdrop-filter:
+        blur(
+            10px
+        );
+
+    -webkit-backdrop-filter:
+        blur(
+            10px
+        );
+}
+
+
+#indexV2Popup.open {
+
+    display:
+        flex;
+
+    animation:
+        indexV2PopupFade
+        0.18s
+        ease-out;
+}
+
+
+#indexV2PopupWindow {
+
+    width:
+        min(
+            1180px,
+            96vw
+        );
+
+    height:
+        min(
+            900px,
+            92vh
+        );
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f5ead8,
+            #dfc49d
+        );
+
+    border:
+        2px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.35
+        );
+
+    box-shadow:
+        0 30px 80px rgba(
+            0,
+            0,
+            0,
+            0.55
+        ),
+        0 0 0 1px rgba(
+            0,
+            0,
+            0,
+            0.18
+        );
+
+    animation:
+        indexV2PopupWindow
+        0.2s
+        ease-out;
+}
+
+
+/* =========================================================
+   POPUP HEADER
+========================================================= */
+
+#indexV2PopupHeader {
+
+    flex-shrink:
+        0;
+
+    min-height:
+        66px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        11px
+        16px
+        11px
+        22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3a2417,
+            #5b3822
+        );
+
+    color:
+        white;
+
+    border-bottom:
+        2px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+}
+
+
+#indexV2PopupTitle {
+
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            20px,
+            3vw,
+            30px
+        );
+
+    font-weight:
+        900;
+
+    color:
+        white;
+}
+
+
+#indexV2PopupClose {
+
+    width:
+        46px;
+
+    height:
+        46px;
+
+    flex-shrink:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #8b5a35,
+            #5b3822
+        );
+
+    color:
+        white;
+
+    font-size:
+        30px;
+
+    font-weight:
+        900;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 7px 0 #342014,
+        0 12px 20px rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+
+    transition:
+        transform 0.14s ease,
+        box-shadow 0.14s ease,
+        filter 0.14s ease;
+}
+
+
+#indexV2PopupClose:hover {
+
+    transform:
+        translateY(
+            -2px
+        )
+        scale(
+            1.04
+        );
+
+    filter:
+        brightness(
+            1.1
+        );
+}
+
+
+#indexV2PopupClose:active {
+
+    transform:
+        translateY(
+            4px
+        )
+        scale(
+            0.98
+        );
+
+    box-shadow:
+        0 2px 0 #342014,
+        0 6px 10px rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
+}
+
+
+/* =========================================================
+   POPUP CONTENT
+========================================================= */
+
+#indexV2PopupContent {
+
+    flex:
+        1;
+
+    min-height:
+        0;
+
+    overflow-y:
+        auto;
+
+    overflow-x:
+        hidden;
+
+    padding:
+        18px;
+}
+
+
+#indexV2PopupContent > .v2-page {
+
+    width:
+        100%;
+
+    min-height:
+        auto !important;
+
+    margin:
+        0 !important;
+
+    transform:
+        none !important;
+}
+
+
+#indexV2PopupContent .v2-page {
+
+    position:
+        relative !important;
+
+    top:
+        auto !important;
+
+    left:
+        auto !important;
+
+    right:
+        auto !important;
+
+    bottom:
+        auto !important;
+
+    opacity:
+        1 !important;
+
+    visibility:
+        visible !important;
+}
+
+
+/* =========================================================
+   BODY LOCK
+========================================================= */
+
+body.index-v2-popup-open {
+
+    overflow:
+        hidden !important;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes indexV2PopupFade {
+
+    from {
+        opacity:
+            0;
+    }
+
+    to {
+        opacity:
+            1;
+    }
+}
+
+
+@keyframes indexV2PopupWindow {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(
+                18px
+            )
+            scale(
+                0.97
+            );
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(
+                0
+            )
+            scale(
+                1
+            );
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .v2-home-links {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    #indexV2Popup {
+
+        padding:
+            8px;
+    }
+
+
+    #indexV2PopupWindow {
+
+        width:
+            100%;
+
+        height:
+            96vh;
+
+        border-radius:
+            20px;
+    }
+
+
+    #indexV2PopupHeader {
+
+        min-height:
+            58px;
+
+        padding:
+            9px
+            12px
+            9px
+            15px;
+    }
+
+
+    #indexV2PopupContent {
+
+        padding:
+            10px;
+    }
+
+
+    #indexV2PopupClose {
+
+        width:
+            42px;
+
+        height:
+            42px;
+
+        border-radius:
+            13px;
+    }
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<!-- =========================================================
-     HOME
-========================================================= -->
+
+<!-- ==================== HOME ==================== -->
 
 <section id="menu">
 
     <div class="left">
 
         <div id="logo">
-            <h1>♞ CHESS CLUB</h1>
-            <p>Play Like A Master</p>
+
+            <h1>
+                ♞ CHESS CLUB
+            </h1>
+
+            <p>
+                Play Like A Master
+            </p>
+
         </div>
+
 
         <div class="playerMini">
 
@@ -47,12 +766,13 @@
                     class="playerMiniElo"
                     id="homeElo"
                 >
-                    3400 Elo
+                    1200s Elo
                 </div>
 
             </div>
 
         </div>
+
 
         <div class="buttons">
 
@@ -126,11 +846,48 @@
 
         </div>
 
+
+        <!-- ==================== V2 BUTTONS ==================== -->
+
+        <div class="v2-home-links">
+
+            <button
+                type="button"
+                onclick="openIndexV2Popup('v2Community')"
+            >
+                🌐 V2 Community
+            </button>
+
+            <button
+                type="button"
+                onclick="openIndexV2Popup('v2Merch')"
+            >
+                🛍 V2 Merch
+            </button>
+
+            <button
+                type="button"
+                onclick="openIndexV2Popup('v2Solo')"
+            >
+                ♟ V2 Solo Chess
+            </button>
+
+            <button
+                type="button"
+                onclick="openIndexV2Popup('v2Puzzles')"
+            >
+                🧩 V2 Puzzles
+            </button>
+
+        </div>
+
+
         <p class="version">
             Version 8.0 Feature Build • Online Multiplayer
         </p>
 
     </div>
+
 
     <div id="boardContainer">
 
@@ -145,11 +902,13 @@
 </section>
 
 
-<!-- =========================================================
-     GAME
-========================================================= -->
 
-<section id="game" class="page">
+<!-- ==================== GAME ==================== -->
+
+<section
+    id="game"
+    class="page"
+>
 
     <div class="topBar">
 
@@ -193,7 +952,9 @@
         </div>
 
 
-        <div class="playerCard rightPlayer">
+        <div
+            class="playerCard rightPlayer"
+        >
 
             <div
                 class="playerName"
@@ -253,11 +1014,13 @@
 </section>
 
 
-<!-- =========================================================
-     BOT PAGE
-========================================================= -->
 
-<section id="botPage" class="page">
+<!-- ==================== BOT ==================== -->
+
+<section
+    id="botPage"
+    class="page"
+>
 
     <h1>
         🤖 Play vs Bot
@@ -277,11 +1040,13 @@
 </section>
 
 
-<!-- =========================================================
-     LEARN
-========================================================= -->
 
-<section id="learnPage" class="page">
+<!-- ==================== LEARN ==================== -->
+
+<section
+    id="learnPage"
+    class="page"
+>
 
     <h1>
         📚 Learn Chess
@@ -346,7 +1111,7 @@
         </button>
 
         <button onclick="startLesson('checkmate')">
-            ♚ Check & Checkmate
+            ♚ Check &amp; Checkmate
         </button>
 
         <button onclick="startLesson('castling')">
@@ -362,9 +1127,6 @@
 </section>
 
 
-<!-- =========================================================
-     LEARN POPUP
-========================================================= -->
 
 <div
     id="learnPopup"
@@ -413,11 +1175,13 @@
 </div>
 
 
-<!-- =========================================================
-     FRIENDS
-========================================================= -->
 
-<section id="friendsPage" class="page">
+<!-- ==================== FRIENDS ==================== -->
+
+<section
+    id="friendsPage"
+    class="page"
+>
 
     <h1>
         👥 Friends
@@ -429,7 +1193,6 @@
     >
         ⬅ Back
     </button>
-
 
     <div class="socialGrid">
 
@@ -458,9 +1221,8 @@
 </section>
 
 
-<!-- =========================================================
-     ONLINE — SUPABASE MULTIPLAYER
-========================================================= -->
+
+<!-- ==================== ONLINE ==================== -->
 
 <section
     id="onlinePage"
@@ -471,7 +1233,6 @@
         🌍 Online Chess
     </h1>
 
-
     <button
         class="backButton"
         onclick="goHome()"
@@ -479,27 +1240,19 @@
         ⬅ Back
     </button>
 
-
     <div class="matchCard">
 
         <div class="matchAvatar">
             ♟
         </div>
 
-
         <h2 id="onlineUsername">
             Player
         </h2>
 
-
         <p id="onlineStats">
             3400 Elo
         </p>
-
-
-        <!-- IMPORTANT:
-             Supabase connection/matchmaking status
-        -->
 
         <p
             id="onlineStatus"
@@ -508,17 +1261,11 @@
             Connecting to Chess Club Online...
         </p>
 
-
-        <button
-            onclick="startMatchmaking()"
-        >
+        <button onclick="startMatchmaking()">
             ⚔ Find Opponent
         </button>
 
-
-        <button
-            onclick="cancelMatchmaking()"
-        >
+        <button onclick="cancelMatchmaking()">
             ✕ Cancel Search
         </button>
 
@@ -527,16 +1274,17 @@
 </section>
 
 
-<!-- =========================================================
-     PROFILE
-========================================================= -->
 
-<section id="profilePage" class="page">
+<!-- ==================== PROFILE ==================== -->
+
+<section
+    id="profilePage"
+    class="page"
+>
 
     <h1>
         👤 My Profile
     </h1>
-
 
     <button
         class="backButton"
@@ -555,16 +1303,13 @@
             ♟
         </div>
 
-
         <h2 id="profileUsername">
             Player
         </h2>
 
-
         <div class="ownerBadge">
             👑 OWNER
         </div>
-
 
         <p id="profileAgeCategory">
             Age category: Private
@@ -657,7 +1402,6 @@
             ✏ Edit Profile
         </button>
 
-
         <button onclick="openAchievements()">
             🏆 Achievements
         </button>
@@ -667,9 +1411,8 @@
 </section>
 
 
-<!-- =========================================================
-     ADVANCEMENTS
-========================================================= -->
+
+<!-- ==================== ADVANCEMENTS ==================== -->
 
 <section
     id="advancementsPage"
@@ -680,14 +1423,12 @@
         🚀 Advancements
     </h1>
 
-
     <button
         class="backButton"
         onclick="goHome()"
     >
         ⬅ Back
     </button>
-
 
     <div class="featureGrid">
 
@@ -725,9 +1466,8 @@
 </section>
 
 
-<!-- =========================================================
-     PUZZLES
-========================================================= -->
+
+<!-- ==================== ORIGINAL PUZZLES ==================== -->
 
 <section
     id="puzzlesPage"
@@ -737,7 +1477,6 @@
     <h1>
         🧩 Puzzles
     </h1>
-
 
     <button
         class="backButton"
@@ -782,14 +1521,11 @@
             Find the best move.
         </p>
 
-
         <div id="puzzleBoard"></div>
-
 
         <button onclick="usePuzzleHint()">
             💡 Hint — 0 Rating Points
         </button>
-
 
         <button onclick="retryPuzzle()">
             🔄 Retry
@@ -800,9 +1536,8 @@
 </section>
 
 
-<!-- =========================================================
-     TOURNAMENTS
-========================================================= -->
+
+<!-- ==================== TOURNAMENTS ==================== -->
 
 <section
     id="tournamentsPage"
@@ -812,7 +1547,6 @@
     <h1>
         🏆 Tournaments
     </h1>
-
 
     <button
         class="backButton"
@@ -842,15 +1576,13 @@
 
     </div>
 
-
     <div id="tournamentStandings"></div>
 
 </section>
 
 
-<!-- =========================================================
-     COLLECTION
-========================================================= -->
+
+<!-- ==================== COLLECTION ==================== -->
 
 <section
     id="collectionPage"
@@ -860,7 +1592,6 @@
     <h1>
         🧰 My Collection
     </h1>
-
 
     <button
         class="backButton"
@@ -906,9 +1637,8 @@
 </section>
 
 
-<!-- =========================================================
-     ACHIEVEMENTS
-========================================================= -->
+
+<!-- ==================== ACHIEVEMENTS ==================== -->
 
 <section
     id="achievementsPage"
@@ -919,7 +1649,6 @@
         🏆 Achievements
     </h1>
 
-
     <button
         class="backButton"
         onclick="openProfile()"
@@ -927,15 +1656,13 @@
         ⬅ Back
     </button>
 
-
     <div id="achievementGrid"></div>
 
 </section>
 
 
-<!-- =========================================================
-     LIVE GAMES
-========================================================= -->
+
+<!-- ==================== LIVE ==================== -->
 
 <section
     id="livePage"
@@ -945,7 +1672,6 @@
     <h1>
         📺 Live Chess Games
     </h1>
-
 
     <button
         class="backButton"
@@ -961,9 +1687,7 @@
             🟢 LIVE NOW
         </div>
 
-
         <div id="liveBoards"></div>
-
 
         <p id="liveWatchTime">
             Watch time: 0 minutes
@@ -979,9 +1703,8 @@
 </section>
 
 
-<!-- =========================================================
-     COMMUNITY
-========================================================= -->
+
+<!-- ==================== ORIGINAL COMMUNITY ==================== -->
 
 <section
     id="communityPage"
@@ -991,7 +1714,6 @@
     <h1>
         🌐 Community
     </h1>
-
 
     <button
         class="backButton"
@@ -1007,19 +1729,15 @@
             🟢 FAMILY FRIENDLY
         </h2>
 
-
         <p>
-            Posts in this community should be appropriate
-            for chess players of all ages.
+            Posts in this community should be appropriate for chess players of all ages.
         </p>
-
 
         <textarea
             id="communityPost"
             maxlength="500"
             placeholder="Write a family-friendly post..."
         ></textarea>
-
 
         <button onclick="publishCommunityPost()">
             📢 Publish
@@ -1030,9 +1748,8 @@
 </section>
 
 
-<!-- =========================================================
-     PREMIUM
-========================================================= -->
+
+<!-- ==================== PREMIUM ==================== -->
 
 <section
     id="premiumPage"
@@ -1042,7 +1759,6 @@
     <h1>
         👑 Premium
     </h1>
-
 
     <button
         class="backButton"
@@ -1104,22 +1820,17 @@
             ❤️ Support Chess Club
         </h2>
 
-
         <p>
-            Payment/contact information can be shown here
-            later through a parent/guardian-managed account.
+            Payment/contact information can be shown here later through a parent/guardian-managed account.
         </p>
-
 
         <div class="supportPlaceholder">
             💬 WhatsApp — username/contact placeholder
         </div>
 
-
         <div class="supportPlaceholder">
             💬 Bale — username/contact placeholder
         </div>
-
 
         <p>
             📱 Phone number hidden
@@ -1130,9 +1841,8 @@
 </section>
 
 
-<!-- =========================================================
-     SETTINGS
-========================================================= -->
+
+<!-- ==================== SETTINGS ==================== -->
 
 <section
     id="settingsPage"
@@ -1142,7 +1852,6 @@
     <h1>
         ⚙ Settings
     </h1>
-
 
     <button
         class="backButton"
@@ -1181,6 +1890,10 @@
                 Choose Sound Theme
             </button>
 
+            <p id="soundThemeStatus">
+                Classic
+            </p>
+
         </div>
 
 
@@ -1211,9 +1924,40 @@
                 English
             </p>
 
-            <button onclick="toggleLanguage()">
-                English / فارسی
-            </button>
+            <select
+                id="v2LanguageSelect"
+                aria-label="Choose language"
+            >
+
+                <option value="en">
+                    🇬🇧 English
+                </option>
+
+                <option value="fa">
+                    🇮🇷 فارسی
+                </option>
+
+                <option value="de">
+                    🇩🇪 Deutsch
+                </option>
+
+                <option value="no">
+                    🇳🇴 Norsk
+                </option>
+
+                <option value="es">
+                    🇪🇸 Español
+                </option>
+
+                <option value="ar">
+                    🇸🇦 العربية
+                </option>
+
+                <option value="fr">
+                    🇫🇷 Français
+                </option>
+
+            </select>
 
         </div>
 
@@ -1225,7 +1969,7 @@
             </h2>
 
             <button onclick="openPrivacySettings()">
-                Privacy & Chat Controls
+                Privacy &amp; Chat Controls
             </button>
 
         </div>
@@ -1261,9 +2005,8 @@
 </section>
 
 
-<!-- =========================================================
-     RULES
-========================================================= -->
+
+<!-- ==================== RULES ==================== -->
 
 <section
     id="rulesPage"
@@ -1273,7 +2016,6 @@
     <h1>
         📜 Chess Club Rules
     </h1>
-
 
     <button
         class="backButton"
@@ -1293,7 +2035,6 @@
             Treat other Chess Club players fairly and respectfully.
         </p>
 
-
         <h2>
             2. Play Fair
         </h2>
@@ -1302,26 +2043,21 @@
             Do not cheat or use unfair methods.
         </p>
 
-
         <h2>
             3. No Sandbagging
         </h2>
 
         <p>
-            Do not intentionally lose games to lower your rating
-            and gain an unfair advantage against lower-rated players.
+            Do not intentionally lose games to lower your rating and gain an unfair advantage against lower-rated players.
         </p>
-
 
         <h2>
             4. No Rating Manipulation
         </h2>
 
         <p>
-            Do not arrange results or use multiple accounts
-            to manipulate ratings.
+            Do not arrange results or use multiple accounts to manipulate ratings.
         </p>
-
 
         <h2>
             5. No Harassment
@@ -1331,24 +2067,20 @@
             Do not bully, threaten, or repeatedly bother other players.
         </p>
 
-
         <h2>
             6. Family Friendly
         </h2>
 
         <p>
-            Community content should remain appropriate for
-            players of different ages.
+            Community content should remain appropriate for players of different ages.
         </p>
-
 
         <h2>
             7. Have Fun
         </h2>
 
         <p>
-            Chess Club is made for learning, improving,
-            competing, and enjoying chess.
+            Chess Club is made for learning, improving, competing, and enjoying chess.
         </p>
 
     </div>
@@ -1356,9 +2088,8 @@
 </section>
 
 
-<!-- =========================================================
-     LOGIN / REGISTER
-========================================================= -->
+
+<!-- ==================== LOGIN ==================== -->
 
 <div
     id="loginOverlay"
@@ -1374,21 +2105,17 @@
             🌐 English / فارسی
         </button>
 
-
         <h1 id="loginTitle">
             ♞ Chess Club
         </h1>
-
 
         <p id="loginSubtitle">
             Sign in or create your Chess Club account.
         </p>
 
-
         <label id="loginUsernameLabel">
             Username
         </label>
-
 
         <input
             id="loginUsername"
@@ -1398,11 +2125,9 @@
             placeholder="Choose a username"
         >
 
-
         <label id="loginPasswordLabel">
             Password
         </label>
-
 
         <input
             id="loginPassword"
@@ -1412,11 +2137,9 @@
             placeholder="Choose a password"
         >
 
-
         <button onclick="createOrSignIn()">
             ♞ Continue
         </button>
-
 
         <p
             id="loginMessage"
@@ -1428,9 +2151,8 @@
 </div>
 
 
-<!-- =========================================================
-     PLACEMENT TEST
-========================================================= -->
+
+<!-- ==================== PLACEMENT ==================== -->
 
 <div
     id="placementOverlay"
@@ -1443,10 +2165,8 @@
             🧠 Chess Knowledge Check
         </h1>
 
-
         <p>
-            Choose how much chess you know, then prove it
-            with questions and puzzles.
+            Choose how much chess you know, then prove it with questions and puzzles.
         </p>
 
 
@@ -1480,9 +2200,8 @@
 </div>
 
 
-<!-- =========================================================
-     RESULT
-========================================================= -->
+
+<!-- ==================== RESULT ==================== -->
 
 <div id="resultOverlay">
 
@@ -1507,11 +2226,9 @@
                     ♟
                 </div>
 
-
                 <h2 id="resultMyName">
                     You
                 </h2>
-
 
                 <p id="resultMyElo">
                     3400 Elo
@@ -1534,11 +2251,9 @@
                     🤖
                 </div>
 
-
                 <h2 id="resultOpponentName">
                     Opponent
                 </h2>
-
 
                 <p id="resultOpponentElo">
                     3400 Elo
@@ -1566,19 +2281,908 @@
 </div>
 
 
+
 <!-- =========================================================
-     SUPABASE
-     MUST LOAD BEFORE script.js
+     V2 COMMUNITY
 ========================================================= -->
+
+<section
+    id="v2Community"
+    class="v2-page"
+>
+
+    <div class="v2-page-head">
+
+        <div>
+
+            <div
+                class="v2-kicker"
+                data-i18n="community"
+            >
+                COMMUNITY
+            </div>
+
+            <h1 data-i18n="communityHub">
+                Chess Club Community
+            </h1>
+
+            <p data-i18n="communitySubtitle">
+                Friends, rankings, chess news and player blogs.
+            </p>
+
+        </div>
+
+
+        <button
+            onclick="closeIndexV2Popup(); goHome();"
+        >
+            🏠 Home
+        </button>
+
+    </div>
+
+
+    <div class="v2-community-tabs">
+
+        <button
+            onclick="v2CommunityTab('friends')"
+            data-i18n="friends"
+        >
+            Friends
+        </button>
+
+        <button
+            onclick="v2CommunityTab('members')"
+            data-i18n="clubMembers"
+        >
+            Club Members
+        </button>
+
+        <button
+            onclick="v2CommunityTab('coaches')"
+            data-i18n="coaches"
+        >
+            Coaches
+        </button>
+
+        <button
+            onclick="v2CommunityTab('top')"
+            data-i18n="topPlayers"
+        >
+            Top Players
+        </button>
+
+        <button
+            onclick="v2CommunityTab('rankings')"
+            data-i18n="rankings"
+        >
+            Rankings
+        </button>
+
+        <button
+            onclick="v2CommunityTab('today')"
+            data-i18n="chessToday"
+        >
+            Chess Today
+        </button>
+
+        <button
+            onclick="v2CommunityTab('news')"
+            data-i18n="news"
+        >
+            News
+        </button>
+
+        <button
+            onclick="v2CommunityTab('blogs')"
+            data-i18n="blogs"
+        >
+            Blogs
+        </button>
+
+    </div>
+
+
+    <div id="v2CommunityContent"></div>
+
+</section>
+
+
+
+<!-- =========================================================
+     V2 MERCH
+========================================================= -->
+
+<section
+    id="v2Merch"
+    class="v2-page"
+>
+
+    <div class="v2-page-head">
+
+        <div>
+
+            <div
+                class="v2-kicker"
+                data-i18n="merch"
+            >
+                MERCH
+            </div>
+
+            <h1 data-i18n="chessClubMerch">
+                Chess Club Merch
+            </h1>
+
+            <p data-i18n="merchSubtitle">
+                Wear the club. Play the game.
+            </p>
+
+        </div>
+
+
+        <button
+            onclick="closeIndexV2Popup(); goHome();"
+        >
+            🏠 Home
+        </button>
+
+    </div>
+
+
+    <div
+        id="v2MerchGrid"
+        class="v2-merch-grid"
+    ></div>
+
+</section>
+
+
+
+<!-- =========================================================
+     V2 SOLO
+========================================================= -->
+
+<section
+    id="v2Solo"
+    class="v2-page"
+>
+
+    <div class="v2-page-head">
+
+        <div>
+
+            <div
+                class="v2-kicker"
+                data-i18n="soloChess"
+            >
+                SOLO CHESS
+            </div>
+
+            <h1 data-i18n="playYourself">
+                Play Chess With Yourself
+            </h1>
+
+            <p data-i18n="soloSubtitle">
+                Control both sides. Your pieces can capture your own pieces.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <button
+                class="v2-primary"
+                onclick="v2SoloReset()"
+                data-i18n="newSoloGame"
+            >
+                New Solo Game
+            </button>
+
+            <button
+                onclick="closeIndexV2Popup(); goHome();"
+            >
+                🏠 Home
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="v2-solo-layout">
+
+        <div
+            id="v2SoloBoard"
+            class="v2-board"
+        ></div>
+
+
+        <div class="v2-side-card">
+
+            <h2 data-i18n="soloRules">
+                Solo Chess
+            </h2>
+
+            <p data-i18n="soloSubtitle">
+                Control both sides. Your pieces can capture your own pieces.
+            </p>
+
+            <div
+                id="v2SoloStatus"
+                class="v2-status"
+            ></div>
+
+            <div
+                id="v2SoloMoves"
+                class="v2-moves"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     V2 PUZZLES
+========================================================= -->
+
+<section
+    id="v2Puzzles"
+    class="v2-page"
+>
+
+    <div class="v2-page-head">
+
+        <div>
+
+            <div
+                class="v2-kicker"
+                data-i18n="puzzles"
+            >
+                PUZZLES
+            </div>
+
+            <h1 data-i18n="nineHundredPuzzles">
+                900 Puzzles
+            </h1>
+
+            <p data-i18n="puzzleSubtitle">
+                A 900-puzzle Chess Club collection.
+            </p>
+
+        </div>
+
+
+        <button
+            onclick="closeIndexV2Popup(); goHome();"
+        >
+            🏠 Home
+        </button>
+
+    </div>
+
+
+    <div class="v2-puzzle-stats">
+
+        <div>
+
+            <b>
+                900
+            </b>
+
+            <span data-i18n="totalPuzzles">
+                Total puzzles
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <b id="v2PuzzleDone">
+                0
+            </b>
+
+            <span data-i18n="completed">
+                Completed
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <b id="v2PuzzleNumber">
+                1
+            </b>
+
+            <span data-i18n="current">
+                Current
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="v2PuzzleList"
+        class="v2-puzzle-grid"
+    ></div>
+
+</section>
+
+
+
+<!-- =========================================================
+     V2 POPUP SHELL
+========================================================= -->
+
+<div
+    id="indexV2Popup"
+    aria-hidden="true"
+>
+
+    <div
+        id="indexV2PopupWindow"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="indexV2PopupTitle"
+    >
+
+        <div id="indexV2PopupHeader">
+
+            <h2 id="indexV2PopupTitle">
+                Chess Club V2
+            </h2>
+
+
+            <button
+                id="indexV2PopupClose"
+                type="button"
+                aria-label="Close V2"
+                title="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div id="indexV2PopupContent"></div>
+
+    </div>
+
+</div>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+
+<section id="adminPanelPage" class="page" hidden>
+    <h1>🛡️ Chess Club Admin Panel</h1>
+
+    <button type="button" onclick="goHome()">
+        ⬅ Back
+    </button>
+
+    <div class="admin-card">
+        <h2>Player moderation</h2>
+
+        <label for="adminPlayerId">Player account ID</label>
+        <input
+            id="adminPlayerId"
+            type="text"
+            maxlength="100"
+            placeholder="Enter player account ID"
+        >
+
+        <label for="adminBanReason">Reason</label>
+        <input
+            id="adminBanReason"
+            type="text"
+            maxlength="300"
+            placeholder="Reason for moderation"
+        >
+
+        <label for="adminBanDuration">Ban duration</label>
+        <select id="adminBanDuration">
+            <option value="1">1 day</option>
+            <option value="7">7 days</option>
+            <option value="30">30 days</option>
+            <option value="permanent">Permanent</option>
+        </select>
+
+        <button type="button" onclick="adminBanPlayer()">
+            🔨 Ban Player
+        </button>
+
+        <button type="button" onclick="adminUnbanPlayer()">
+            ✅ Unban Player
+        </button>
+
+        <p id="adminPanelMessage" role="status"></p>
+    </div>
+</section>
+
+<!-- ==================== SCRIPTS ==================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="script.js"></script>
+
+<script src="chessclub_v2.js?v=2"></script>
 
 <!-- =========================================================
-     CHESS CLUB SCRIPT
+     REAL 900 PUZZLE SYSTEM
 ========================================================= -->
 
-<script src="script.js"></script>
+<script src="v2-puzzles-real.js"></script>
+
+
+
+<!-- =========================================================
+     INDEX-LEVEL V2 POPUP CONTROLLER
+     FIXED + HARDENED
+========================================================= -->
+
+<script>
+(function () {
+
+    "use strict";
+
+
+    let activeSection = null;
+
+    let originalParent = null;
+
+    let originalNextSibling = null;
+
+    let originalStyle = "";
+
+    let originalHidden = false;
+
+    let isClosing = false;
+
+
+    const popup =
+        document.getElementById(
+            "indexV2Popup"
+        );
+
+
+    const popupContent =
+        document.getElementById(
+            "indexV2PopupContent"
+        );
+
+
+    const popupTitle =
+        document.getElementById(
+            "indexV2PopupTitle"
+        );
+
+
+    const closeButton =
+        document.getElementById(
+            "indexV2PopupClose"
+        );
+
+
+    /* =====================================================
+       SAFETY CHECKS
+    ===================================================== */
+
+    if (
+        !popup ||
+        !popupContent ||
+        !popupTitle ||
+        !closeButton
+    ) {
+
+        console.error(
+            "Chess Club V2: popup elements are missing."
+        );
+
+        return;
+    }
+
+
+    /* =====================================================
+       POPUP STATE
+    ===================================================== */
+
+    function setPopupState(
+        open
+    ) {
+
+        popup.classList.toggle(
+            "open",
+            open
+        );
+
+
+        popup.setAttribute(
+            "aria-hidden",
+            open
+                ? "false"
+                : "true"
+        );
+
+
+        document.body.classList.toggle(
+            "index-v2-popup-open",
+            open
+        );
+
+
+        document.body.style.overflow =
+            open
+                ? "hidden"
+                : "";
+    }
+
+
+    /* =====================================================
+       LANGUAGE REFRESH
+    ===================================================== */
+
+    function refreshV2Language() {
+
+        try {
+
+            if (
+                typeof window.v2SetLanguage ===
+                "function"
+            ) {
+
+                const language =
+                    localStorage.getItem(
+                        "chessClubLanguage"
+                    ) || "en";
+
+
+                window.v2SetLanguage(
+                    language
+                );
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Chess Club V2 language refresh failed:",
+                error
+            );
+        }
+    }
+
+
+    /* =====================================================
+       RESTORE ORIGINAL SECTION
+    ===================================================== */
+
+    function restoreActiveSection() {
+
+        if (!activeSection) {
+            return;
+        }
+
+
+        const section =
+            activeSection;
+
+
+        try {
+
+            if (
+                originalParent &&
+                originalParent.isConnected
+            ) {
+
+                if (
+                    originalNextSibling &&
+                    originalNextSibling.parentNode ===
+                    originalParent
+                ) {
+
+                    originalParent.insertBefore(
+                        section,
+                        originalNextSibling
+                    );
+
+                } else {
+
+                    originalParent.appendChild(
+                        section
+                    );
+                }
+            }
+
+
+            if (originalStyle) {
+
+                section.setAttribute(
+                    "style",
+                    originalStyle
+                );
+
+            } else {
+
+                section.removeAttribute(
+                    "style"
+                );
+            }
+
+
+            section.hidden =
+                originalHidden;
+
+
+        } catch (error) {
+
+            console.error(
+                "Chess Club V2: failed to restore section:",
+                error
+            );
+        }
+
+
+        activeSection = null;
+
+        originalParent = null;
+
+        originalNextSibling = null;
+
+        originalStyle = "";
+
+        originalHidden = false;
+    }
+
+
+    /* =====================================================
+       OPEN V2 POPUP
+    ===================================================== */
+
+    window.openIndexV2Popup =
+        function (
+            sectionId
+        ) {
+
+            try {
+
+                if (
+                    typeof sectionId !==
+                        "string" ||
+                    !sectionId.trim()
+                ) {
+
+                    console.warn(
+                        "Chess Club V2: invalid section ID."
+                    );
+
+                    return;
+                }
+
+
+                const section =
+                    document.getElementById(
+                        sectionId
+                    );
+
+
+                if (!section) {
+
+                    console.error(
+                        "Chess Club V2: section not found:",
+                        sectionId
+                    );
+
+                    return;
+                }
+
+
+                if (activeSection) {
+
+                    window.closeIndexV2Popup();
+                }
+
+
+                activeSection =
+                    section;
+
+
+                originalParent =
+                    section.parentNode;
+
+
+                originalNextSibling =
+                    section.nextSibling;
+
+
+                originalStyle =
+                    section.getAttribute(
+                        "style"
+                    ) || "";
+
+
+                originalHidden =
+                    section.hidden;
+
+
+                const heading =
+                    section.querySelector(
+                        "h1"
+                    );
+
+
+                popupTitle.textContent =
+                    heading
+                        ? heading.textContent.trim()
+                        : "Chess Club V2";
+
+
+                popupContent.replaceChildren(
+                    section
+                );
+
+
+                section.hidden =
+                    false;
+
+
+                section.style.display =
+                    "block";
+
+
+                setPopupState(
+                    true
+                );
+
+
+                window.setTimeout(
+                    refreshV2Language,
+                    20
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Chess Club V2: failed to open popup:",
+                    error
+                );
+
+
+                restoreActiveSection();
+
+                setPopupState(
+                    false
+                );
+            }
+        };
+
+
+    /* =====================================================
+       CLOSE V2 POPUP
+    ===================================================== */
+
+    window.closeIndexV2Popup =
+        function () {
+
+            if (isClosing) {
+                return;
+            }
+
+
+            isClosing =
+                true;
+
+
+            try {
+
+                restoreActiveSection();
+
+
+                popupContent.replaceChildren();
+
+
+                setPopupState(
+                    false
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Chess Club V2: failed to close popup:",
+                    error
+                );
+
+            } finally {
+
+                isClosing =
+                    false;
+            }
+        };
+
+
+    /* =====================================================
+       CLOSE BUTTON
+    ===================================================== */
+
+    closeButton.addEventListener(
+        "click",
+        function () {
+
+            window.closeIndexV2Popup();
+
+        }
+    );
+
+
+    /* =====================================================
+       CLICK OUTSIDE POPUP
+    ===================================================== */
+
+    popup.addEventListener(
+        "click",
+        function (
+            event
+        ) {
+
+            if (
+                event.target ===
+                popup
+            ) {
+
+                window.closeIndexV2Popup();
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       ESC KEY
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function (
+            event
+        ) {
+
+            if (
+                event.key ===
+                    "Escape" &&
+                popup.classList.contains(
+                    "open"
+                )
+            ) {
+
+                event.preventDefault();
+
+                window.closeIndexV2Popup();
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIAL STATE
+    ===================================================== */
+
+    setPopupState(
+        false
+    );
+
+
+})();
+</script>
+
 
 </body>
 </html>
